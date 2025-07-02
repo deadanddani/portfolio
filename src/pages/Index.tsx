@@ -10,29 +10,66 @@ const Index = () => {
   const projects = [
     {
       title: "Find Me Today",
-      description: "A daily geography challenge where you must find random locations around the world each day. Minimalist design with intuitive interface.",
-      image: "/api/placeholder/400/240",
+      description: "A daily geography challenge where you must find random locations around the world each day to try to beat your fiends.",
+      images: [
+        "src/assets/InicioFindMeToday.png",
+        "src/assets/FindMeTodayResultadoBien.png",
+        "src/assets/juegoFindMeTodayBien.png"
+      ],
       liveUrl: "https://www.findmetoday.es",
-      technologies: ["React", "TypeScript", "CSS", "Geolocation API"],
+      technologies: ["Angular", "TypeScript", "Astro", "Geolocation API"],
       isActive: true
     },
     {
       title: "Trip Planner AI",
       description: "Smart travel planning application using AI. Allows creating personalized itineraries based on user preferences.",
-      image: "/api/placeholder/400/240", 
+      images: [
+        "src/assets/inicioTripPlannerAI.png",
+        "src/assets/loadingScrennTripPlannerAI.png",
+        "src/assets/TripPlannerViajes.png"
+      ],
       liveUrl: "https://www.tripplannerai.es",
-      technologies: ["React", "AI/ML", "JavaScript", "API Integration"],
+      technologies: ["React", "Node.js", "AI"],
       isActive: true
     }
   ];
 
   const skills = [
-    { skill: "Angular", level: "advanced" as const },
-    { skill: "React", level: "advanced" as const },
-    { skill: "Salesforce", level: "intermediate" as const },
-    { skill: "Datadog", level: "intermediate" as const },
+    { skill: "Angular", level: "intermediate" as const },
+    { skill: "React", level: "intermediate" as const },
+    { skill: "Node.js", level: "intermediate" as const },
+    { skill: "Salesforce", level: "advanced" as const },
+    { skill: "Architecture", level: "advanced" as const },
+    { skill: "Datadog", level: "advanced" as const },
     { skill: "Git", level: "advanced" as const },
     { skill: "AI Integration", level: "intermediate" as const }
+  ];
+
+  const experience = [
+    {
+      name: "Northius",
+      period: "2023 - Actualidad",
+      skills: "Salesforce, Arquitectura, IA",
+      logo: (
+        <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="24" cy="24" r="24" fill="#6366F1"/><text x="50%" y="55%" textAnchor="middle" fill="white" fontSize="18" fontFamily="Arial" dy=".3em">N</text></svg>
+      )
+    },
+    {
+      name: "CoverWallet (Aon)",
+      period: "2020 - 2023",
+      skills: "Salesforce, Automatización, Agile",
+      logo: (
+        <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="24" cy="24" r="24" fill="#10B981"/><text x="50%" y="55%" textAnchor="middle" fill="white" fontSize="18" fontFamily="Arial" dy=".3em">C</text></svg>
+      )
+    },
+    {
+      name: "UOC",
+      period: "2018 - 2022",
+      skills: "Web, Bases de datos, Arquitectura",
+      logo: (
+        <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="24" cy="24" r="24" fill="#F59E42"/><text x="50%" y="55%" textAnchor="middle" fill="white" fontSize="18" fontFamily="Arial" dy=".3em">U</text></svg>
+      )
+    }
   ];
 
   const scrollToSection = (sectionId: string) => {
@@ -50,15 +87,12 @@ const Index = () => {
           <div className="flex flex-col items-center justify-center text-center py-16">
             <div className="max-w-4xl space-y-6 animate-fade-in">
               <h1 className="text-4xl lg:text-6xl font-bold text-foreground leading-tight">
-                Senior Developer
+              <span className="bg-gradient-primary bg-clip-text text-transparent">Salesforce Technical Architect</span>
                 <br />
-                <span className="bg-gradient-primary bg-clip-text text-transparent">
                   Daniel Vadillo
-                </span>
               </h1>
               <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-                Full Stack Developer specialized in creating innovative web applications 
-                with React, TypeScript and AI technologies. I transform ideas into exceptional digital experiences.
+              Experienced in leading large-scale Salesforce projects from design to delivery. building scalable and maintainable solutions.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Button 
@@ -101,11 +135,7 @@ const Index = () => {
               </div>
               <div className="flex items-center gap-2">
                 <Code className="w-4 h-4 text-primary" />
-                Full Stack Developer
-              </div>
-              <div className="flex items-center gap-2">
-                <Calendar className="w-4 h-4 text-primary" />
-                Available for projects
+                Salesforce developer
               </div>
             </div>
           </div>
@@ -120,8 +150,7 @@ const Index = () => {
               My Projects
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Here is a selection of my most outstanding projects, where I combine 
-              creativity and technology to create unique experiences.
+              Here is a selection of my most outstanding projects, fell free to leave feed back.
             </p>
           </div>
           
@@ -133,6 +162,30 @@ const Index = () => {
                 style={{ animationDelay: `${index * 0.2}s` }}
               >
                 <ProjectCard {...project} />
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Experience Section */}
+      <section id="experience" className="py-16 bg-secondary/30">
+        <div className="container mx-auto px-6">
+          <div className="text-center space-y-4 mb-12 animate-fade-in">
+            <h2 className="text-3xl lg:text-4xl font-bold text-foreground">
+              Experience
+            </h2>
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+              A brief overview of my professional journey and key skills acquired.
+            </p>
+          </div>
+          <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 animate-fade-in-up">
+            {experience.map((exp, idx) => (
+              <div key={exp.name} className="bg-card rounded-lg shadow p-6 flex flex-col items-center border border-border text-center">
+                <div className="mb-4">{exp.logo}</div>
+                <h3 className="text-lg font-semibold text-foreground mb-1">{exp.name}</h3>
+                <p className="text-sm text-muted-foreground mb-2">{exp.period}</p>
+                <p className="text-base text-foreground">{exp.skills}</p>
               </div>
             ))}
           </div>
@@ -204,7 +257,7 @@ const Index = () => {
       <footer className="py-8 bg-background border-t border-border">
         <div className="container mx-auto px-6">
           <div className="text-center text-muted-foreground">
-            <p>&copy; 2024 Daniel Vadillo. All rights reserved.</p>
+            <p>Have a good day :)</p>
           </div>
         </div>
       </footer>

@@ -53,7 +53,7 @@ const Navigation = () => {
             <Button 
               variant="ghost" 
               size="sm"
-              onClick={() => window.open('https://github.com', '_blank')}
+              onClick={() => window.open('https://github.com/deadanddani', '_blank')}
             >
               <Github className="w-4 h-4" />
             </Button>
