@@ -1,7 +1,13 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ExternalLink, Github } from "lucide-react";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Navigation, Autoplay } from 'swiper/modules';
+
+// Import Swiper styles
+import 'swiper/css';
+import 'swiper/css/navigation';
 
 interface ProjectCardProps {
   title: string;
@@ -10,117 +16,94 @@ interface ProjectCardProps {
   liveUrl: string;
   technologies: string[];
   isActive?: boolean;
+  isMobileFormatImages?: boolean;
 }
 
-const ProjectCard = ({ title, description, images, liveUrl, technologies, isActive }: ProjectCardProps) => {
-  const [currentImage, setCurrentImage] = useState(0);
-  const totalImages = images.length;
-  const prevImage = () => setCurrentImage((prev) => (prev - 1 + totalImages) % totalImages);
-  const nextImage = () => setCurrentImage((prev) => (prev + 1) % totalImages);
-
-  const touchStartX = useRef(0);
-  const isDragging = useRef(false);
-  const mouseStartX = useRef(0);
-
-  const handleTouchStart = (e: React.TouchEvent) => {
-    touchStartX.current = e.touches[0].clientX;
-    isDragging.current = true;
-  };
-
-  const handleTouchEnd = (e: React.TouchEvent) => {
-    if (!isDragging.current) return;
-    const touchEndX = e.changedTouches[0].clientX;
-    const deltaX = touchEndX - touchStartX.current;
-
-    if (deltaX > 50) { // Swipe right
-      prevImage();
-    } else if (deltaX < -50) { // Swipe left
-      nextImage();
-    }
-    isDragging.current = false;
-  };
-
-  const handleMouseDown = (e: React.MouseEvent) => {
-    e.preventDefault(); // Prevent image selection/dragging
-    mouseStartX.current = e.clientX;
-    isDragging.current = true;
-  };
-
-  const handleMouseMove = (e: React.MouseEvent) => {
-    if (!isDragging.current) return;
-    e.preventDefault(); // Prevent default browser drag behavior
-  };
-
-  const handleMouseUp = (e: React.MouseEvent) => {
-    if (!isDragging.current) return;
-    const mouseEndX = e.clientX;
-    const deltaX = mouseEndX - mouseStartX.current;
-
-    if (deltaX > 50) { // Swipe right
-      prevImage();
-    } else if (deltaX < -50) { // Swipe left
-      nextImage();
-    }
-    isDragging.current = false;
-  };
+const ProjectCard = ({ title, description, images, liveUrl, technologies, isActive, isMobileFormatImages }: ProjectCardProps) => {
+  const [currentSwiperIndex, setCurrentSwiperIndex] = useState(0);
+  const [backgroundFadeIn, setBackgroundFadeIn] = useState(false);
+  const [prevBackgroundImage, setPrevBackgroundImage] = useState<string | null>(null);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentImage((prev) => (prev + 1) % totalImages);
-    }, 5000); // Change image every 5 seconds
-
-    return () => clearInterval(interval);
-  }, [totalImages]);
+    if (images.length > 0) {
+      // Cuando la imagen principal de Swiper cambia, actualiza la imagen de fondo anterior
+      // y activa la transición de entrada para la nueva.
+      setPrevBackgroundImage(images[currentSwiperIndex]);
+      setBackgroundFadeIn(false); // Inicia la desaparición de la imagen antigua
+      // Espera un breve momento antes de iniciar la aparición de la nueva para asegurar la transición
+      const timer = setTimeout(() => {
+        setBackgroundFadeIn(true); // Aparece la imagen nueva
+      }, 50); // Pequeño retardo
+      return () => clearTimeout(timer);
+    }
+  }, [currentSwiperIndex, images]);
 
   return (
     <Card className="group bg-card border-border hover:shadow-card transition-all duration-500 hover:scale-105 overflow-hidden min-h-[28rem]">
       <div
         className="relative overflow-hidden"
-        onTouchStart={handleTouchStart}
-        onTouchEnd={handleTouchEnd}
-        onMouseDown={handleMouseDown}
-        onMouseMove={handleMouseMove}
-        onMouseUp={handleMouseUp}
-        onMouseLeave={handleMouseUp} // End drag if mouse leaves the element
       >
-        <div
-          className="flex transition-transform duration-500 ease-in-out"
-          style={{ transform: `translateX(-${currentImage * 100}%)` }}
-        >
-          {images.map((image, index) => (
-            <img
-              key={index}
-              src={image}
-              alt={`${title} image ${index + 1}`}
-              className="w-full h-48 object-cover flex-shrink-0"
-            />
-          ))}
-        </div>
-        {totalImages > 1 && (
+        {isMobileFormatImages && images.length > 0 && (
           <>
-            <button
-              onClick={prevImage}
-              className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/30 hover:bg-black/50 text-white rounded-full p-2 z-10 transition-opacity duration-200"
-              style={{ backdropFilter: 'blur(2px)' }}
-              aria-label="Imagen anterior"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
-            </button>
-            <button
-              onClick={nextImage}
-              className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/30 hover:bg-black/50 text-white rounded-full p-2 z-10 transition-opacity duration-200"
-              style={{ backdropFilter: 'blur(2px)' }}
-              aria-label="Imagen siguiente"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
-            </button>
+            {/* Imagen anterior para el efecto de desvanecimiento */}
+            {prevBackgroundImage && (
+              <div className={`absolute inset-0 z-0 transition-opacity duration-500 ease-in-out ${backgroundFadeIn ? 'opacity-0' : 'opacity-100'}`}>
+                <img
+                  src={prevBackgroundImage}
+                  alt="Fondo difuminado anterior"
+                  className="w-full h-full object-cover blur-lg scale-125"
+                />
+                <div className="absolute inset-0 bg-black/60"></div> {/* Superposición oscura para contraste */}
+              </div>
+            )}
+            {/* Imagen actual para el efecto de aparición */}
+            <div className={`absolute inset-0 z-0 transition-opacity duration-500 ease-in-out ${backgroundFadeIn ? 'opacity-100' : 'opacity-0'}`}>
+              <img
+                src={images[currentSwiperIndex]}
+                alt="Fondo difuminado actual"
+                className="w-full h-full object-cover blur-lg scale-125"
+              />
+              <div className="absolute inset-0 bg-black/60"></div>
+            </div>
           </>
         )}
+
+        <Swiper
+          modules={[Navigation, Autoplay]}
+          spaceBetween={0}
+          slidesPerView={1}
+          loop={true}
+          autoplay={{
+            delay: 5000,
+            disableOnInteraction: false,
+          }}
+          navigation={true}
+          className="mySwiper relative z-10" // Asegura que el contenido de Swiper esté por encima del fondo
+          onSlideChange={(swiper) => setCurrentSwiperIndex(swiper.realIndex)}
+        >
+          {images.map((image, index) => (
+            <SwiperSlide key={index}>
+              <img
+                src={image}
+                alt={`${title} image ${index + 1}`}
+                className={`w-full h-48 flex-shrink-0 ${isMobileFormatImages ? 'object-contain' : 'object-cover'}`}
+              />
+            </SwiperSlide>
+          ))}
+        </Swiper>
+
         {isActive && (
-          <div className="absolute top-3 right-3 bg-accent text-accent-foreground px-2 py-1 rounded-full text-xs font-medium animate-glow">
+          <div className="absolute top-3 right-3 bg-accent text-accent-foreground px-2 py-1 rounded-full text-xs font-medium animate-glow z-20">
             Active
           </div>
         )}
+
+        {!isActive && (
+          <div className="absolute top-3 right-3 bg-red-500 text-white px-2 py-1 rounded-full text-xs font-medium z-20">
+            Inactive
+          </div>
+        )}
+
       </div>
       
       <CardHeader>

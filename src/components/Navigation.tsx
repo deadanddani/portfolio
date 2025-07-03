@@ -20,25 +20,31 @@ const Navigation = () => {
               onClick={() => scrollToSection('about')}
               className="text-muted-foreground hover:text-primary transition-colors duration-300"
             >
-              Sobre mí
+              About me
             </button>
             <button 
               onClick={() => scrollToSection('projects')}
               className="text-muted-foreground hover:text-primary transition-colors duration-300"
             >
-              Proyectos
+              Proyects
+            </button>
+            <button 
+              onClick={() => scrollToSection('experience')}
+              className="text-muted-foreground hover:text-primary transition-colors duration-300"
+            >
+              Experience
             </button>
             <button 
               onClick={() => scrollToSection('skills')}
               className="text-muted-foreground hover:text-primary transition-colors duration-300"
             >
-              Habilidades
+              Skills
             </button>
             <button 
               onClick={() => scrollToSection('contact')}
               className="text-muted-foreground hover:text-primary transition-colors duration-300"
             >
-              Contacto
+              Contact
             </button>
           </div>
 

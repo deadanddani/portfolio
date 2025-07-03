@@ -83,3 +83,15 @@ All colors MUST be HSL.
     @apply bg-background text-foreground;
   }
 }
+
+.swiper-button-next,
+.swiper-button-prev {
+  color: #333333 !important; /* Adjust to a darker color */
+}
+
+@media (prefers-color-scheme: dark) {
+  .swiper-button-next,
+  .swiper-button-prev {
+    color: #cccccc !important; /* Lighter color for dark mode */
+  }
+}

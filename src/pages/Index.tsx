@@ -20,7 +20,7 @@ const Index = () => {
         `${import.meta.env.BASE_URL}juegoFindMeTodayBien.png`,
       ],
       liveUrl: "https://www.findmetoday.es",
-      technologies: ["Angular", "TypeScript", "Astro", "Geolocation API"],
+      technologies: ["Angular", "TypeScript", "Astro", "Geolocation API", "SEO"],
       isActive: true,
     },
     {
@@ -34,6 +34,19 @@ const Index = () => {
       liveUrl: "https://www.tripplannerai.es",
       technologies: ["React", "Node.js", "AI"],
       isActive: true,
+    },
+    {
+      title: "Find Me Today Mobile",
+      description: "A mobile version of Find Me Today. Publication was discontinued due to frequent update requirements from app stores.",
+      images: [
+        `${import.meta.env.BASE_URL}findMeTodayMobileInicio.webp`,
+        `${import.meta.env.BASE_URL}FindMeTodayMobileResultado.webp`,
+        `${import.meta.env.BASE_URL}FindMeTodayMobileJuego.webp`,
+      ],
+      liveUrl: "",
+      technologies: ["Ionic", "Node.js", "Google ads"],
+      isActive: false,
+      isMobileFormatImages: true,
     },
   ];
 
@@ -50,23 +63,23 @@ const Index = () => {
 
   const experience = [
     {
-      name: "Northius",
-      period: "2023 - Today",
-      skills: "Salesforce, Arquitectura, IA",
-      logo: <img src={northiusLogo} alt="Northius Logo" className="w-12 h-12 rounded-full" />,
-    },
-    {
-      name: "CoverWallet",
-      period: "2020 - 2023",
-      skills: "Salesforce, Arquitectura, IA, Agile",
-      logo: <img src={coverwalletLogo} alt="CoverWallet Logo" className="w-12 h-12 rounded-full" />,
-    },
-    {
       name: "Izertis",
       period: "2018 - 2022",
       skills: "Salesforce, Incidencias",
       logo: <img src={izertisLogo} alt="Izertis Logo" className="w-12 h-12 rounded-full" />,
     },
+    {
+      name: "CoverWallet",
+      period: "2020 - 2023",
+      skills: "Salesforce, Arquitectura, Agile",
+      logo: <img src={coverwalletLogo} alt="CoverWallet Logo" className="w-12 h-12 rounded-full" />,
+    },
+    {
+      name: "Northius",
+      period: "2023 - Today",
+      skills: "Salesforce, Arquitectura, IA",
+      logo: <img src={northiusLogo} alt="Northius Logo" className="w-12 h-12 rounded-full" />,
+    }
   ];
 
   const scrollToSection = (sectionId: string) => {
@@ -111,7 +124,7 @@ const Index = () => {
           <div className="max-w-3xl mx-auto text-center space-y-6 animate-fade-in-up">
             <h2 className="text-3xl lg:text-4xl font-bold text-foreground">About Me</h2>
             <p className="text-lg text-muted-foreground leading-relaxed">
-            I’m a passionate developer committed to building digital solutions that drive real impact. I specialize in Salesforce, where I create innovative applications that turn ideas into powerful user experiences.
+            I'm a passionate developer committed to building digital solutions that drive real impact. I specialize in Salesforce, where I create innovative applications that turn ideas into powerful user experiences.
             </p>
             <div className="flex flex-wrap justify-center gap-6 text-sm text-muted-foreground">
               <div className="flex items-center gap-2">
