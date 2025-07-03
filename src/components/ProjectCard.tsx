@@ -1,7 +1,7 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ExternalLink, Github } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 
 interface ProjectCardProps {
   title: string;
@@ -18,14 +18,84 @@ const ProjectCard = ({ title, description, images, liveUrl, technologies, isActi
   const prevImage = () => setCurrentImage((prev) => (prev - 1 + totalImages) % totalImages);
   const nextImage = () => setCurrentImage((prev) => (prev + 1) % totalImages);
 
+  const touchStartX = useRef(0);
+  const isDragging = useRef(false);
+  const mouseStartX = useRef(0);
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+    isDragging.current = true;
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (!isDragging.current) return;
+    const touchEndX = e.changedTouches[0].clientX;
+    const deltaX = touchEndX - touchStartX.current;
+
+    if (deltaX > 50) { // Swipe right
+      prevImage();
+    } else if (deltaX < -50) { // Swipe left
+      nextImage();
+    }
+    isDragging.current = false;
+  };
+
+  const handleMouseDown = (e: React.MouseEvent) => {
+    e.preventDefault(); // Prevent image selection/dragging
+    mouseStartX.current = e.clientX;
+    isDragging.current = true;
+  };
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!isDragging.current) return;
+    e.preventDefault(); // Prevent default browser drag behavior
+  };
+
+  const handleMouseUp = (e: React.MouseEvent) => {
+    if (!isDragging.current) return;
+    const mouseEndX = e.clientX;
+    const deltaX = mouseEndX - mouseStartX.current;
+
+    if (deltaX > 50) { // Swipe right
+      prevImage();
+    } else if (deltaX < -50) { // Swipe left
+      nextImage();
+    }
+    isDragging.current = false;
+  };
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentImage((prev) => (prev + 1) % totalImages);
+    }, 5000); // Change image every 5 seconds
+
+    return () => clearInterval(interval);
+  }, [totalImages]);
+
   return (
     <Card className="group bg-card border-border hover:shadow-card transition-all duration-500 hover:scale-105 overflow-hidden min-h-[28rem]">
-      <div className="relative overflow-hidden">
-        <img 
-          src={images[currentImage]} 
-          alt={title}
-          className="w-full h-48 object-cover transition-transform duration-500"
-        />
+      <div
+        className="relative overflow-hidden"
+        onTouchStart={handleTouchStart}
+        onTouchEnd={handleTouchEnd}
+        onMouseDown={handleMouseDown}
+        onMouseMove={handleMouseMove}
+        onMouseUp={handleMouseUp}
+        onMouseLeave={handleMouseUp} // End drag if mouse leaves the element
+      >
+        <div
+          className="flex transition-transform duration-500 ease-in-out"
+          style={{ transform: `translateX(-${currentImage * 100}%)` }}
+        >
+          {images.map((image, index) => (
+            <img
+              key={index}
+              src={image}
+              alt={`${title} image ${index + 1}`}
+              className="w-full h-48 object-cover flex-shrink-0"
+            />
+          ))}
+        </div>
         {totalImages > 1 && (
           <>
             <button
