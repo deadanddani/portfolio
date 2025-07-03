@@ -87,6 +87,37 @@ const Index = () => {
     element?.scrollIntoView({ behavior: "smooth" });
   };
 
+  const certifications = [
+    {
+      name: "Salesforce Certified AI Associate",
+      imageUrl: `${import.meta.env.BASE_URL}certis/2023-07_Badge_SF-Certified_AI-Associate_500x490px.png`,
+    },
+    {
+      name: "Salesforce Certified Platform App Builder",
+      imageUrl: `${import.meta.env.BASE_URL}certis/2021-03_Badge_SF-Certified_Platform-App-Builder_500x490px.png`,
+    },
+    {
+      name: "Salesforce Certified Agentforce Specialist",
+      imageUrl: `${import.meta.env.BASE_URL}certis/2025-02_Badge_SF-Certified_Agentforce-Specialist_Low-Res.png`,
+    },
+    {
+      name: "Salesforce Certified Platform Developer I",
+      imageUrl: `${import.meta.env.BASE_URL}certis/2021-03_Badge_SF-Certified_Platform-Developer-I_500x490px.png`,
+    },
+    {
+      name: "Salesforce Certified Sharing and Visibility Architect",
+      imageUrl: `${import.meta.env.BASE_URL}certis/2021-11_Badge_SF-Certified_Sharing-and-Visibility-Architect_500x490px.png`,
+    },
+    {
+      name: "Salesforce Certified Data Architect",
+      imageUrl: `${import.meta.env.BASE_URL}certis/2021-11_Badge_SF-Certified_Data-Architect_500x490px.png`,
+    },
+    {
+      name: "Salesforce Certified Application Architect",
+      imageUrl: `${import.meta.env.BASE_URL}certis/2021-03_Badge_SF-Certified_Application-Architect_500x490px.png`,
+    },
+  ];
+
   return (
     <div className="min-h-screen bg-background text-foreground">
       <Navigation />
@@ -198,6 +229,27 @@ const Index = () => {
                 </div>
               ))}
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Certifications Section */}
+      <section id="certifications" className="py-16 bg-secondary/30">
+        <div className="container mx-auto px-6">
+          <div className="text-center space-y-4 mb-12 animate-fade-in">
+            <h2 className="text-3xl lg:text-4xl font-bold text-foreground">Certifications</h2>
+          </div>
+
+          <div className="max-w-4xl mx-auto flex flex-wrap justify-center gap-6 animate-fade-in-up">
+            {certifications.map((cert, index) => (
+              <div key={cert.name} className="animate-fade-in-up" style={{ animationDelay: `${index * 0.15}s` }}>
+                <img 
+                  src={cert.imageUrl} 
+                  alt={cert.name} 
+                  className="h-24 w-auto object-contain mx-auto"
+                />
+              </div>
+            ))}
           </div>
         </div>
       </section>
