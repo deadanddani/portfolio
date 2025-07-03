@@ -51,12 +51,12 @@ const Index = () => {
   const experience = [
     {
       name: "Northius",
-      period: "2023 - Actualidad",
+      period: "2023 - Today",
       skills: "Salesforce, Arquitectura, IA",
       logo: <img src={northiusLogo} alt="Northius Logo" className="w-12 h-12 rounded-full" />,
     },
     {
-      name: "CoverWallet (Aon)",
+      name: "CoverWallet",
       period: "2020 - 2023",
       skills: "Salesforce, Arquitectura, IA, Agile",
       logo: <img src={coverwalletLogo} alt="CoverWallet Logo" className="w-12 h-12 rounded-full" />,
@@ -89,7 +89,7 @@ const Index = () => {
                 Daniel Vadillo
               </h1>
               <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-                Experienced in leading large-scale Salesforce projects from design to delivery. building scalable and maintainable solutions.
+                Experienced in leading large-scale Salesforce projects from design to delivery. Building scalable and maintainable solutions.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Button variant="hero" size="lg" onClick={() => scrollToSection("projects")}>
@@ -111,8 +111,7 @@ const Index = () => {
           <div className="max-w-3xl mx-auto text-center space-y-6 animate-fade-in-up">
             <h2 className="text-3xl lg:text-4xl font-bold text-foreground">About Me</h2>
             <p className="text-lg text-muted-foreground leading-relaxed">
-              I am a passionate developer dedicated to creating digital solutions that make a difference. With experience in frontend and backend
-              development, I specialize in React, TypeScript and artificial intelligence technology integration to create innovative applications.
+            I’m a passionate developer committed to building digital solutions that drive real impact. I specialize in Salesforce, where I create innovative applications that turn ideas into powerful user experiences.
             </p>
             <div className="flex flex-wrap justify-center gap-6 text-sm text-muted-foreground">
               <div className="flex items-center gap-2">
