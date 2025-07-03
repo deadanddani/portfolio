@@ -58,13 +58,13 @@ const Index = () => {
     {
       name: "CoverWallet (Aon)",
       period: "2020 - 2023",
-      skills: "Salesforce, Automatización, Agile",
+      skills: "Salesforce, Arquitectura, IA, Agile",
       logo: <img src={coverwalletLogo} alt="CoverWallet Logo" className="w-12 h-12 rounded-full" />,
     },
     {
-      name: "UOC",
+      name: "Izertis",
       period: "2018 - 2022",
-      skills: "Web, Bases de datos, Arquitectura",
+      skills: "Salesforce, Incidencias",
       logo: <img src={izertisLogo} alt="Izertis Logo" className="w-12 h-12 rounded-full" />,
     },
   ];
