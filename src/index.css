@@ -95,3 +95,9 @@ All colors MUST be HSL.
     color: #cccccc !important; /* Lighter color for dark mode */
   }
 }
+
+@media screen and (max-width: 800px) {
+  .projectCardIndex {
+    width: 90vw !important;
+  }
+}

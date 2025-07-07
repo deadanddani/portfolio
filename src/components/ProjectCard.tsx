@@ -1,7 +1,7 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ExternalLink, Github } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Autoplay } from 'swiper/modules';
 
@@ -23,6 +23,7 @@ const ProjectCard = ({ title, description, images, liveUrl, technologies, isActi
   const [currentSwiperIndex, setCurrentSwiperIndex] = useState(0);
   const [backgroundFadeIn, setBackgroundFadeIn] = useState(false);
   const [prevBackgroundImage, setPrevBackgroundImage] = useState<string | null>(null);
+  const swiperRef = useRef(null); // Referencia para la instancia de Swiper
 
   useEffect(() => {
     if (images.length > 0) {
@@ -38,10 +39,21 @@ const ProjectCard = ({ title, description, images, liveUrl, technologies, isActi
     }
   }, [currentSwiperIndex, images]);
 
+  useEffect(() => {
+    if (swiperRef.current) {
+      const timer = setTimeout(() => {
+        // Forzar una actualización de Swiper después de un breve retardo
+        // @ts-ignore
+        swiperRef.current.update();
+      }, 100); // Retardo de 100ms
+      return () => clearTimeout(timer);
+    }
+  }, [images]); // Dependencia de `images` para re-ejecutar si el contenido del Swiper cambia
+
   return (
-    <Card className="group bg-card border-border hover:shadow-card transition-all duration-500 hover:scale-105 overflow-hidden min-h-[28rem]">
+    <Card className="group bg-card border-border hover:shadow-card transition-all duration-500 hover:scale-105 overflow-hidden min-h-[28rem] w-full max-w-full">
       <div
-        className="relative overflow-hidden"
+        className="relative overflow-hidden w-full max-w-full"
       >
         {isMobileFormatImages && images.length > 0 && (
           <>
@@ -78,15 +90,18 @@ const ProjectCard = ({ title, description, images, liveUrl, technologies, isActi
             disableOnInteraction: false,
           }}
           navigation={true}
-          className="mySwiper relative z-10" // Asegura que el contenido de Swiper esté por encima del fondo
+          className="mySwiper relative z-10 min-w-0" // Asegura que el contenido de Swiper esté por encima del fondo y tome todo el ancho
           onSlideChange={(swiper) => setCurrentSwiperIndex(swiper.realIndex)}
+          observer={true}
+          observeParents={true}
+          onSwiper={(swiper) => { swiperRef.current = swiper; }} // Asigna la instancia de Swiper a la ref
         >
           {images.map((image, index) => (
-            <SwiperSlide key={index}>
+            <SwiperSlide key={index} className="w-full h-full overflow-hidden flex justify-center items-center">
               <img
                 src={image}
                 alt={`${title} image ${index + 1}`}
-                className={`w-full h-48 flex-shrink-0 ${isMobileFormatImages ? 'object-contain' : 'object-cover'}`}
+                className={`w-full h-48 min-w-0 block ${isMobileFormatImages ? 'object-contain max-w-full' : 'object-cover'}`}
               />
             </SwiperSlide>
           ))}

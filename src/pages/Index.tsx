@@ -183,7 +183,7 @@ const Index = () => {
 
           <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
             {projects.map((project, index) => (
-              <div key={project.title} className="animate-fade-in-up" style={{ animationDelay: `${index * 0.2}s` }}>
+              <div key={project.title} className="animate-fade-in-up w-full projectCardIndex" style={{ animationDelay: `${index * 0.2}s` }}>
                 <ProjectCard {...project} />
               </div>
             ))}
