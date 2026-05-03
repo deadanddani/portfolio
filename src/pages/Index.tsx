@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import "@/styles/cinematic-blueprint.css";
 
 const BASE = import.meta.env.BASE_URL;
@@ -120,8 +120,8 @@ const CB_PROJECTS: Project[] = [
 type Cert = { name: string; img: string; tier: "architect" | "ai" | "developer"; year: string };
 
 const CB_CERTS: Cert[] = [
-  { name: "Platform Development Lifecycle & Deployment Architect", img: "", tier: "architect", year: "2026" },
-  { name: "Platform Integration Architect", img: "", tier: "architect", year: "2026" },
+  { name: "Platform Development Lifecycle & Deployment Architect", img: asset("assets/cert-deployment.png"), tier: "architect", year: "2026" },
+  { name: "Platform Integration Architect", img: asset("assets/cert-integration.png"), tier: "architect", year: "2026" },
   { name: "Application Architect", img: asset("assets/cert-app-architect.png"), tier: "architect", year: "2021" },
   { name: "Data Architect", img: asset("assets/cert-data-architect.png"), tier: "architect", year: "2021" },
   { name: "Sharing & Visibility Architect", img: asset("assets/cert-sharing.png"), tier: "architect", year: "2021" },
@@ -231,15 +231,65 @@ function CBStats() {
 }
 
 function CBProject({ project, index }: { project: Project; index: number }) {
-  const [hover, setHover] = useState(false);
   const [imgIdx, setImgIdx] = useState(0);
   const [dragX, setDragX] = useState(0);
   const [animating, setAnimating] = useState(false);
-  const [userInteracted, setUserInteracted] = useState(false);
+  const [lightbox, setLightbox] = useState(false);
+  const [lbDragX, setLbDragX] = useState(0);
+  const [lbAnimating, setLbAnimating] = useState(false);
+  const [lbWidth, setLbWidth] = useState(() => typeof window !== "undefined" ? window.innerWidth : 1024);
+  const lbStageRef = useRef<HTMLDivElement | null>(null);
   const frameRef = useRef<HTMLDivElement | null>(null);
   const [frameWidth, setFrameWidth] = useState(0);
   const dragRef = useRef<{ startX: number; active: boolean; pointerId: number; moved: boolean } | null>(null);
+  const lbDragRef = useRef<{ startX: number; active: boolean; pointerId: number; moved: boolean } | null>(null);
+  const idleRef = useRef<number | null>(null);
   const total = project.images.length;
+
+  useLayoutEffect(() => {
+    if (!lightbox) return;
+    const update = () => setLbWidth(lbStageRef.current?.offsetWidth || window.innerWidth);
+    update();
+    window.addEventListener("resize", update);
+    return () => window.removeEventListener("resize", update);
+  }, [lightbox]);
+
+  const onLbPointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (lbAnimating) return;
+    if ((e.target as HTMLElement).closest("button")) return;
+    (e.currentTarget as HTMLDivElement).setPointerCapture(e.pointerId);
+    lbDragRef.current = { startX: e.clientX, active: true, pointerId: e.pointerId, moved: false };
+    setLbDragX(0);
+  };
+  const onLbPointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (!lbDragRef.current?.active) return;
+    const dx = e.clientX - lbDragRef.current.startX;
+    if (Math.abs(dx) > 3) lbDragRef.current.moved = true;
+    setLbDragX(dx);
+  };
+  const onLbPointerEnd = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (!lbDragRef.current?.active) return;
+    const dx = e.clientX - lbDragRef.current.startX;
+    const moved = lbDragRef.current.moved;
+    lbDragRef.current.active = false;
+    if (!moved) {
+      setLbDragX(0);
+      return;
+    }
+    const threshold = Math.min(80, lbWidth * 0.12);
+    const target = dx <= -threshold ? -lbWidth : dx >= threshold ? lbWidth : 0;
+    setLbAnimating(true);
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => setLbDragX(target));
+    });
+  };
+  const onLbTransitionEnd = () => {
+    if (!lbAnimating) return;
+    if (lbDragX <= -lbWidth + 1) setImgIdx((i) => (i + 1) % total);
+    else if (lbDragX >= lbWidth - 1) setImgIdx((i) => (i - 1 + total) % total);
+    setLbDragX(0);
+    setLbAnimating(false);
+  };
 
   useEffect(() => {
     const el = frameRef.current;
@@ -251,16 +301,30 @@ function CBProject({ project, index }: { project: Project; index: number }) {
     return () => ro.disconnect();
   }, []);
 
+  const advance = (dir = 1) => {
+    if (animating || dragRef.current?.active || total < 2 || frameWidth === 0) return;
+    setAnimating(true);
+    const target = dir > 0 ? -frameWidth : frameWidth;
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => setDragX(target));
+    });
+  };
+
+  const scheduleIdle = () => {
+    if (idleRef.current) clearTimeout(idleRef.current);
+    if (total < 2 || lightbox) return;
+    idleRef.current = window.setTimeout(() => advance(1), 5000);
+  };
+
   useEffect(() => {
-    if (!hover || userInteracted) return;
-    if (dragRef.current?.active) return;
-    const id = setInterval(() => setImgIdx((i) => (i + 1) % total), 1300);
-    return () => clearInterval(id);
-  }, [hover, total, userInteracted]);
+    scheduleIdle();
+    return () => { if (idleRef.current) clearTimeout(idleRef.current); };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [imgIdx, frameWidth, total, lightbox]);
 
   const goTo = (i: number) => {
-    setUserInteracted(true);
     setImgIdx(((i % total) + total) % total);
+    scheduleIdle();
   };
 
   const onPointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
@@ -269,6 +333,7 @@ function CBProject({ project, index }: { project: Project; index: number }) {
     (e.currentTarget as HTMLDivElement).setPointerCapture(e.pointerId);
     dragRef.current = { startX: e.clientX, active: true, pointerId: e.pointerId, moved: false };
     setDragX(0);
+    if (idleRef.current) clearTimeout(idleRef.current);
   };
   const onPointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
     if (!dragRef.current?.active) return;
@@ -279,17 +344,20 @@ function CBProject({ project, index }: { project: Project; index: number }) {
   const onPointerEnd = (e: React.PointerEvent<HTMLDivElement>) => {
     if (!dragRef.current?.active) return;
     const dx = e.clientX - dragRef.current.startX;
+    const moved = dragRef.current.moved;
     dragRef.current.active = false;
-    const threshold = Math.min(60, frameWidth * 0.15);
-    setUserInteracted(true);
-    setAnimating(true);
-    if (dx <= -threshold) {
-      setDragX(-frameWidth);
-    } else if (dx >= threshold) {
-      setDragX(frameWidth);
-    } else {
+    if (!moved) {
       setDragX(0);
+      setLightbox(true);
+      if (idleRef.current) clearTimeout(idleRef.current);
+      return;
     }
+    const threshold = Math.min(60, frameWidth * 0.15);
+    const target = dx <= -threshold ? -frameWidth : dx >= threshold ? frameWidth : 0;
+    setAnimating(true);
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => setDragX(target));
+    });
   };
   const onTransitionEnd = () => {
     if (!animating) return;
@@ -308,11 +376,25 @@ function CBProject({ project, index }: { project: Project; index: number }) {
   const prevIdx = (imgIdx - 1 + total) % total;
   const nextIdx = (imgIdx + 1) % total;
 
+  useEffect(() => {
+    if (!lightbox) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setLightbox(false);
+      else if (e.key === "ArrowRight") setImgIdx((i) => (i + 1) % total);
+      else if (e.key === "ArrowLeft") setImgIdx((i) => (i - 1 + total) % total);
+    };
+    window.addEventListener("keydown", onKey);
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      document.body.style.overflow = prev;
+    };
+  }, [lightbox, total]);
+
   return (
     <article
       className={`cb-project ${reverse ? "reverse" : ""} ${project.isMobile ? "is-mobile" : ""}`}
-      onMouseEnter={() => setHover(true)}
-      onMouseLeave={() => { setHover(false); }}
     >
       <div className="cb-proj-visual">
         <div
@@ -322,7 +404,7 @@ function CBProject({ project, index }: { project: Project; index: number }) {
           onPointerMove={onPointerMove}
           onPointerUp={onPointerEnd}
           onPointerCancel={onPointerEnd}
-          style={{ touchAction: "pan-y", cursor: dragging ? "grabbing" : "grab" }}
+          style={{ touchAction: "pan-y", cursor: dragging ? "grabbing" : "zoom-in" }}
         >
           {project.images.map((src, i) => {
             let translate = 0;
@@ -332,20 +414,20 @@ function CBProject({ project, index }: { project: Project; index: number }) {
             else if (showAdjacent && i === prevIdx) { translate = dragX - frameWidth; visible = true; }
             const onEnd = i === imgIdx ? onTransitionEnd : undefined;
             return (
-              <img
+              <div
                 key={src}
-                src={src}
-                alt=""
-                loading="lazy"
-                draggable={false}
+                className="cb-proj-slide"
                 onTransitionEnd={onEnd}
                 style={{
                   opacity: visible ? 1 : 0,
                   transform: `translateX(${translate}px)`,
-                  transition: dragging ? "none" : "transform .3s ease, opacity .3s ease",
+                  transition: dragging || !visible ? "none" : "transform .3s ease, opacity .3s ease",
                   pointerEvents: "none",
                 }}
-              />
+              >
+                <img className="cb-proj-bg" src={src} alt="" loading="lazy" draggable={false} aria-hidden="true" />
+                <img className="cb-proj-fg" src={src} alt="" loading="lazy" draggable={false} />
+              </div>
             );
           })}
           <div className="cb-proj-bp" />
@@ -407,6 +489,85 @@ function CBProject({ project, index }: { project: Project; index: number }) {
           <span className="cb-proj-link cb-proj-link-muted">{project.url}</span>
         )}
       </div>
+
+      {lightbox && (() => {
+        const lbDragging = !!lbDragRef.current?.active;
+        const lbShowAdj = lbDragging || lbAnimating;
+        return (
+          <div
+            className="cb-lightbox"
+            onClick={() => setLightbox(false)}
+            role="dialog"
+            aria-modal="true"
+            aria-label={`${project.title} — image ${imgIdx + 1}`}
+          >
+            <button
+              type="button"
+              className="cb-lb-close"
+              onClick={(e) => { e.stopPropagation(); setLightbox(false); }}
+              aria-label="Close"
+            >×</button>
+            <button
+              type="button"
+              className="cb-lb-nav cb-lb-prev"
+              onClick={(e) => { e.stopPropagation(); setImgIdx((i) => (i - 1 + total) % total); }}
+              aria-label="Previous"
+            >‹</button>
+            <div
+              ref={lbStageRef}
+              className="cb-lb-stage"
+              onClick={(e) => {
+                const stage = lbStageRef.current;
+                if (!stage) return;
+                const imgs = stage.querySelectorAll<HTMLImageElement>(".cb-lb-img");
+                const active = imgs[imgIdx];
+                if (!active) return;
+                const r = active.getBoundingClientRect();
+                if (e.clientX >= r.left && e.clientX <= r.right && e.clientY >= r.top && e.clientY <= r.bottom) {
+                  e.stopPropagation();
+                }
+              }}
+              onPointerDown={onLbPointerDown}
+              onPointerMove={onLbPointerMove}
+              onPointerUp={onLbPointerEnd}
+              onPointerCancel={onLbPointerEnd}
+              style={{ touchAction: "pan-y", cursor: lbDragging ? "grabbing" : "grab" }}
+            >
+              {project.images.map((src, i) => {
+                let translate = 0;
+                let visible = false;
+                if (i === imgIdx) { translate = lbDragX; visible = true; }
+                else if (lbShowAdj && i === nextIdx) { translate = lbDragX + lbWidth; visible = true; }
+                else if (lbShowAdj && i === prevIdx) { translate = lbDragX - lbWidth; visible = true; }
+                const onEnd = i === imgIdx ? onLbTransitionEnd : undefined;
+                return (
+                  <img
+                    key={src}
+                    className="cb-lb-img"
+                    src={src}
+                    alt=""
+                    draggable={false}
+                    onTransitionEnd={onEnd}
+                    style={{
+                      opacity: visible ? 1 : 0,
+                      transform: `translate(-50%, -50%) translateX(${translate}px)`,
+                      transition: lbDragging || !visible ? "none" : "transform .3s ease, opacity .3s ease",
+                      pointerEvents: "none",
+                    }}
+                  />
+                );
+              })}
+            </div>
+            <button
+              type="button"
+              className="cb-lb-nav cb-lb-next"
+              onClick={(e) => { e.stopPropagation(); setImgIdx((i) => (i + 1) % total); }}
+              aria-label="Next"
+            >›</button>
+            <div className="cb-lb-counter">{imgIdx + 1} / {total}</div>
+          </div>
+        );
+      })()}
     </article>
   );
 }
