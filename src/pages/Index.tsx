@@ -54,6 +54,21 @@ type Project = {
 
 const CB_PROJECTS: Project[] = [
   {
+    title: "MCPs for Salesforce CLI",
+    tagline: "Safe AI interactions with Salesforce orgs.",
+    desc: "Open-source set of Model Context Protocol servers that lets AI assistants interact with Salesforce environments in a safe, controlled way. Production and any environment you flag are hard-blocked, so the model can act against orgs without putting sensitive data or live deployments at risk. Already adopted by a large part of my team for day-to-day Salesforce work.",
+    url: "github.com/deadanddani/MCPs_for_Salesforce_CLI",
+    href: "https://github.com/deadanddani/MCPs_for_Salesforce_CLI",
+    stack: ["TypeScript", "MCP", "Salesforce CLI", "Node.js"],
+    metrics: [
+      { k: "domain", v: "Salesforce · AI tooling" },
+      { k: "safety", v: "Prod & flagged orgs blocked" },
+      { k: "adoption", v: "Used across my team" },
+    ],
+    live: true,
+    images: [asset("assets/mcp-1.png")],
+  },
+  {
     title: "Polymarket Edge Bot",
     tagline: "Front-running BTC sentiment, programmatically.",
     desc: "A Rust-powered bot that ingests live Bitcoin order-book and on-chain signals, models short-horizon probabilities, and places positions on Polymarket before the market reprices. Backed by a statistical pipeline and simulations to validate real-world edge before any capital goes in.",
@@ -431,31 +446,35 @@ function CBProject({ project, index }: { project: Project; index: number }) {
             );
           })}
           <div className="cb-proj-bp" />
-          <div className="cb-proj-dots">
-            {project.images.map((_, i) => (
+          {total > 1 && (
+            <div className="cb-proj-dots">
+              {project.images.map((_, i) => (
+                <button
+                  key={i}
+                  type="button"
+                  className={`cb-proj-dot ${i === imgIdx ? "is-active" : ""}`}
+                  onClick={() => goTo(i)}
+                  aria-label={`Show image ${i + 1}`}
+                />
+              ))}
+            </div>
+          )}
+        </div>
+        {total > 1 && (
+          <div className="cb-proj-thumbs">
+            {project.images.map((src, i) => (
               <button
-                key={i}
+                key={src}
                 type="button"
-                className={`cb-proj-dot ${i === imgIdx ? "is-active" : ""}`}
+                className={`cb-proj-thumb ${i === imgIdx ? "is-active" : ""}`}
                 onClick={() => goTo(i)}
-                aria-label={`Show image ${i + 1}`}
-              />
+                aria-label={`Image ${i + 1}`}
+              >
+                <img src={src} alt="" loading="lazy" />
+              </button>
             ))}
           </div>
-        </div>
-        <div className="cb-proj-thumbs">
-          {project.images.map((src, i) => (
-            <button
-              key={src}
-              type="button"
-              className={`cb-proj-thumb ${i === imgIdx ? "is-active" : ""}`}
-              onClick={() => goTo(i)}
-              aria-label={`Image ${i + 1}`}
-            >
-              <img src={src} alt="" loading="lazy" />
-            </button>
-          ))}
-        </div>
+        )}
         <div className="cb-proj-index">PROJECT / 0{index + 1}</div>
       </div>
 
