@@ -1,288 +1,567 @@
-import Navigation from "@/components/Navigation";
-import ProjectCard from "@/components/ProjectCard";
-import SkillBadge from "@/components/SkillBadge";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Mail, MapPin, Calendar, Code, Globe, Smartphone, Linkedin } from "lucide-react";
-import heroImage from "@/assets/hero-image.jpg";
-import northiusLogo from "/public/northius_logo.jfif";
-import coverwalletLogo from "/public/CoverWallet_Logo.png";
-import izertisLogo from "/public/izertis-log.png";
+import { useEffect, useRef, useState } from "react";
+import "@/styles/cinematic-blueprint.css";
 
-const Index = () => {
-  const projects = [
-    {
-      title: "Find Me Today",
-      description: "A daily geography challenge where you must find random locations around the world each day to try to beat your fiends.",
-      images: [
-        `${import.meta.env.BASE_URL}InicioFindMeToday.png`,
-        `${import.meta.env.BASE_URL}FindMeTodayResultadoBien.png`,
-        `${import.meta.env.BASE_URL}juegoFindMeTodayBien.png`,
-      ],
-      liveUrl: "https://www.findmetoday.es",
-      technologies: ["Angular", "TypeScript", "Astro", "Geolocation API", "SEO"],
-      isActive: true,
-    },
-    {
-      title: "Trip Planner AI",
-      description: "Smart travel planning application using AI. Allows creating personalized itineraries based on user preferences.",
-      images: [
-        `${import.meta.env.BASE_URL}inicioTripPlannerAI.png`,
-        `${import.meta.env.BASE_URL}loadingScrennTripPlannerAI.png`,
-        `${import.meta.env.BASE_URL}TripPlannerViajes.png`,
-      ],
-      liveUrl: "https://www.tripplannerai.es",
-      technologies: ["React", "Node.js", "AI"],
-      isActive: true,
-    },
-    {
-      title: "Find Me Today Mobile",
-      description: "A mobile version of Find Me Today. Publication was discontinued due to frequent update requirements from app stores.",
-      images: [
-        `${import.meta.env.BASE_URL}findMeTodayMobileInicio.webp`,
-        `${import.meta.env.BASE_URL}FindMeTodayMobileResultado.webp`,
-        `${import.meta.env.BASE_URL}FindMeTodayMobileJuego.webp`,
-      ],
-      liveUrl: "",
-      technologies: ["Ionic", "Node.js", "Google ads"],
-      isActive: false,
-      isMobileFormatImages: true,
-    },
-  ];
+const BASE = import.meta.env.BASE_URL;
+const asset = (p: string) => `${BASE}${p}`;
 
-  const skills = [
-    { skill: "Angular", level: "intermediate" as const },
-    { skill: "React", level: "intermediate" as const },
-    { skill: "Node.js", level: "intermediate" as const },
-    { skill: "Salesforce", level: "advanced" as const },
-    { skill: "Architecture", level: "advanced" as const },
-    { skill: "Datadog", level: "advanced" as const },
-    { skill: "Git", level: "advanced" as const },
-    { skill: "AI Integration", level: "intermediate" as const },
-  ];
+const CB_PROFILE = {
+  name: "Daniel Vadillo",
+  role: "Software Architect",
+  tagline: "I design systems that don't crumble at scale.",
+  email: "daniel.vadillo.1q@gmail.com",
+  linkedin: "https://www.linkedin.com/in/daniel-vadillo-rand-8b95b11b6/",
+};
 
-  const experience = [
-    {
-      name: "Izertis",
-      period: "2018 - 2022",
-      skills: "Salesforce, Incidencias",
-      logo: <img src={izertisLogo} alt="Izertis Logo" className="w-12 h-12 rounded-full" />,
-    },
-    {
-      name: "CoverWallet",
-      period: "2020 - 2023",
-      skills: "Salesforce, Arquitectura, Agile",
-      logo: <img src={coverwalletLogo} alt="CoverWallet Logo" className="w-12 h-12 rounded-full" />,
-    },
-    {
-      name: "Northius",
-      period: "2023 - Today",
-      skills: "Salesforce, Arquitectura, IA",
-      logo: <img src={northiusLogo} alt="Northius Logo" className="w-12 h-12 rounded-full" />,
-    }
-  ];
+const CB_STATS = [
+  { value: 6, suffix: "", label: "Years designing & shipping software" },
+  { value: 9, suffix: "", label: "Certifications" },
+  { value: 5, suffix: "", label: "Side projects shipped" },
+  { value: 3, suffix: "", label: "Architecture principles I live by" },
+];
 
-  const scrollToSection = (sectionId: string) => {
-    const element = document.getElementById(sectionId);
-    element?.scrollIntoView({ behavior: "smooth" });
-  };
+type TimelineItem = {
+  year: string;
+  company: string;
+  role: string;
+  note: string;
+  logo: string;
+  location?: string;
+  period: string;
+  current?: boolean;
+};
 
-  const certifications = [
-    {
-      name: "Salesforce Certified AI Associate",
-      imageUrl: `${import.meta.env.BASE_URL}certis/2023-07_Badge_SF-Certified_AI-Associate_500x490px.png`,
-    },
-    {
-      name: "Salesforce Certified Platform App Builder",
-      imageUrl: `${import.meta.env.BASE_URL}certis/2021-03_Badge_SF-Certified_Platform-App-Builder_500x490px.png`,
-    },
-    {
-      name: "Salesforce Certified Agentforce Specialist",
-      imageUrl: `${import.meta.env.BASE_URL}certis/2025-02_Badge_SF-Certified_Agentforce-Specialist_Low-Res.png`,
-    },
-    {
-      name: "Salesforce Certified Platform Developer I",
-      imageUrl: `${import.meta.env.BASE_URL}certis/2021-03_Badge_SF-Certified_Platform-Developer-I_500x490px.png`,
-    },
-    {
-      name: "Salesforce Certified Sharing and Visibility Architect",
-      imageUrl: `${import.meta.env.BASE_URL}certis/2021-11_Badge_SF-Certified_Sharing-and-Visibility-Architect_500x490px.png`,
-    },
-    {
-      name: "Salesforce Certified Data Architect",
-      imageUrl: `${import.meta.env.BASE_URL}certis/2021-11_Badge_SF-Certified_Data-Architect_500x490px.png`,
-    },
-    {
-      name: "Salesforce Certified Application Architect",
-      imageUrl: `${import.meta.env.BASE_URL}certis/2021-03_Badge_SF-Certified_Application-Architect_500x490px.png`,
-    },
-  ];
+const CB_TIMELINE: TimelineItem[] = [
+  { year: "2025", company: "Northius", role: "Senior Salesforce Engineer", note: "Architecture, integration, and AI initiatives across the EdTech platform.", logo: asset("assets/northius.jfif"), location: "Madrid · Remote", period: "May 2025 — present", current: true },
+  { year: "2024", company: "CoverWallet (Aon)", role: "Mid Salesforce Developer", note: "Event-driven integrations on insurance flows for the EU market — designing how Salesforce talks to internal microservices in near real time.", logo: asset("assets/coverwallet.png"), location: "Hybrid", period: "Sept 2024 — May 2025" },
+  { year: "2023", company: "CoverWallet (Aon)", role: "Junior Salesforce Developer", note: "Joined to focus on integration between Salesforce and internal microservices.", logo: asset("assets/coverwallet.png"), location: "Hybrid", period: "Mar 2023 — Oct 2024" },
+  { year: "2020", company: "IZERTIS", role: "Salesforce Developer", note: "First chapter — integration projects across multiple enterprise clients, production support, and releases.", logo: asset("assets/izertis.png"), period: "Jun 2020 — Apr 2023" },
+];
+
+type ProjectMetric = { k: string; v: string };
+type Project = {
+  title: string;
+  tagline: string;
+  desc: string;
+  url: string;
+  href: string;
+  stack: string[];
+  metrics: ProjectMetric[];
+  live?: boolean;
+  aiFree?: boolean;
+  images: string[];
+  isMobile?: boolean;
+};
+
+const CB_PROJECTS: Project[] = [
+  {
+    title: "Polymarket Edge Bot",
+    tagline: "Front-running BTC sentiment, programmatically.",
+    desc: "A Rust-powered bot that ingests live Bitcoin order-book and on-chain signals, models short-horizon probabilities, and places positions on Polymarket before the market reprices. Backed by a statistical pipeline and simulations to validate real-world edge before any capital goes in.",
+    url: "Personal · Quant experiment",
+    href: "",
+    stack: ["Rust", "WebSockets", "Statistics & simulations", "Polymarket API", "On-chain data"],
+    metrics: [
+      { k: "domain", v: "Crypto · Prediction markets" },
+      { k: "loop", v: "Real-time" },
+      { k: "validation", v: "Simulated PnL" },
+    ],
+    live: true,
+    images: [asset("assets/polybot-1.png"), asset("assets/polybot-2.png"), asset("assets/polybot-3.png")],
+  },
+  {
+    title: "Find Me Today",
+    tagline: "A daily geography duel.",
+    desc: "Players race against friends to pinpoint a random location on the planet, every single day. Built solo end-to-end.",
+    url: "findmetoday.es",
+    href: "https://www.findmetoday.es",
+    stack: ["Angular", "Astro", "TypeScript", "Geolocation API"],
+    metrics: [{ k: "format", v: "Daily challenge" }, { k: "status", v: "Live" }],
+    aiFree: true,
+    live: true,
+    images: [asset("assets/findmetoday-1.png"), asset("assets/findmetoday-2.png"), asset("assets/findmetoday-3.png")],
+  },
+  {
+    title: "Find Me Today — Mobile",
+    tagline: "Native port, archived.",
+    desc: "Ionic + Capacitor port. Pulled from stores due to maintenance overhead, but a fun delivery exercise.",
+    url: "Archived",
+    href: "",
+    stack: ["Ionic", "Capacitor", "Node.js"],
+    metrics: [{ k: "format", v: "Mobile" }, { k: "status", v: "Archived" }],
+    aiFree: true,
+    images: [asset("assets/findmetoday-mobile-1.webp"), asset("assets/findmetoday-mobile-2.webp"), asset("assets/findmetoday-mobile-3.webp")],
+    isMobile: true,
+  },
+  {
+    title: "Gym Tracker",
+    tagline: "A pocket logbook for the gym.",
+    desc: "Personal PWA built with Next.js — a web app that behaves like a native one on iPhone, so I can log every set, rep, and weight straight from the rack with no app store and no friction. The real win is owning the data: I can analyse it, spot plateaus, and keep iterating on the app itself. I run it for friends and family too, and I keep adding recaps and friendly competitions between us.",
+    url: "Personal · PWA",
+    href: "",
+    stack: ["Next.js", "React", "PWA", "iOS"],
+    metrics: [{ k: "type", v: "Personal" }, { k: "platform", v: "PWA · iOS" }],
+    live: true,
+    images: [asset("assets/gymtracker-1.jpeg"), asset("assets/gymtracker-2.jpeg"), asset("assets/gymtracker-3.jpeg"), asset("assets/gymtracker-4.jpeg"), asset("assets/gymtracker-5.jpeg")],
+    isMobile: true,
+  },
+  {
+    title: "Trip Planner AI",
+    tagline: "An AI can now plan your trip.",
+    desc: "Personalised trip planning powered by an LLM. Caches popular regions for instant suggestions and SEO. To keep the project sustainable long-term, it currently runs on a budget-tier model — output quality may be degraded compared to flagship LLMs.",
+    url: "tripplannerai.es",
+    href: "https://www.tripplannerai.es",
+    stack: ["React", "Node.js", "OpenAI", "SEO"],
+    metrics: [{ k: "engine", v: "LLM-backed" }, { k: "status", v: "Live" }],
+    live: true,
+    images: [asset("assets/tripplanner-1.png"), asset("assets/tripplanner-2.png"), asset("assets/tripplanner-3.png")],
+  },
+];
+
+type Cert = { name: string; img: string; tier: "architect" | "ai" | "developer"; year: string };
+
+const CB_CERTS: Cert[] = [
+  { name: "Platform Development Lifecycle & Deployment Architect", img: "", tier: "architect", year: "2026" },
+  { name: "Platform Integration Architect", img: "", tier: "architect", year: "2026" },
+  { name: "Application Architect", img: asset("assets/cert-app-architect.png"), tier: "architect", year: "2021" },
+  { name: "Data Architect", img: asset("assets/cert-data-architect.png"), tier: "architect", year: "2021" },
+  { name: "Sharing & Visibility Architect", img: asset("assets/cert-sharing.png"), tier: "architect", year: "2021" },
+  { name: "Agentforce Specialist", img: asset("assets/cert-agentforce.png"), tier: "ai", year: "2025" },
+  { name: "AI Associate", img: asset("assets/cert-ai.png"), tier: "ai", year: "2023" },
+  { name: "Platform Developer I", img: asset("assets/cert-dev1.png"), tier: "developer", year: "2021" },
+  { name: "Platform App Builder", img: asset("assets/cert-app-builder.png"), tier: "developer", year: "2021" },
+];
+
+function useCounter(target: number, start: boolean, dur = 1400) {
+  const [v, setV] = useState(0);
+  useEffect(() => {
+    if (!start) return;
+    let raf = 0;
+    let t0 = 0;
+    const step = (t: number) => {
+      if (!t0) t0 = t;
+      const p = Math.min(1, (t - t0) / dur);
+      const eased = 1 - Math.pow(1 - p, 3);
+      setV(Math.round(target * eased));
+      if (p < 1) raf = requestAnimationFrame(step);
+    };
+    raf = requestAnimationFrame(step);
+    return () => cancelAnimationFrame(raf);
+  }, [target, start, dur]);
+  return v;
+}
+
+function CBHero() {
+  const [parallax, setParallax] = useState({ x: 0, y: 0 });
+  useEffect(() => {
+    const onMove = (e: MouseEvent) => {
+      const x = (e.clientX / window.innerWidth - 0.5) * 16;
+      const y = (e.clientY / window.innerHeight - 0.5) * 16;
+      setParallax({ x, y });
+    };
+    window.addEventListener("mousemove", onMove);
+    return () => window.removeEventListener("mousemove", onMove);
+  }, []);
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
-      <Navigation />
+    <section className="cb-hero">
+      <div className="cb-hero-grid" style={{ transform: `translate3d(${parallax.x}px, ${parallax.y}px, 0)` }} />
+      <div className="cb-hero-glow" style={{ transform: `translate3d(${-parallax.x * 1.5}px, ${-parallax.y * 1.5}px, 0)` }} />
 
-      {/* Hero Section */}
-      <section className="pt-20 pb-12 bg-gradient-hero">
-        <div className="container mx-auto px-6">
-          <div className="flex flex-col items-center justify-center text-center py-16">
-            <div className="max-w-4xl space-y-6 animate-fade-in">
-              <h1 className="text-4xl lg:text-6xl font-bold text-foreground leading-tight">
-                <span className="bg-gradient-primary bg-clip-text text-transparent">Salesforce Technical Architect</span>
-                <br />
-                Daniel Vadillo
-              </h1>
-              <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-                Experienced in leading large-scale Salesforce projects from design to delivery. Building scalable and maintainable solutions.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Button variant="hero" size="lg" onClick={() => scrollToSection("projects")}>
-                  View My Projects
-                </Button>
-                <Button variant="outline" size="lg" onClick={() => scrollToSection("contact")}>
-                  <Mail className="w-4 h-4" />
-                  Contact
-                </Button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+      <div className="cb-hero-meta">
+        <span className="cb-meta-dot" />
+        <span>Open to architecture roles · 2026</span>
+      </div>
 
-      {/* About Section */}
-      <section id="about" className="py-16 bg-background">
-        <div className="container mx-auto px-6">
-          <div className="max-w-3xl mx-auto text-center space-y-6 animate-fade-in-up">
-            <h2 className="text-3xl lg:text-4xl font-bold text-foreground">About Me</h2>
-            <p className="text-lg text-muted-foreground leading-relaxed">
-            I'm a passionate developer committed to building digital solutions that drive real impact. I specialize in Salesforce, where I create innovative applications that turn ideas into powerful user experiences.
-            </p>
-            <div className="flex flex-wrap justify-center gap-6 text-sm text-muted-foreground">
-              <div className="flex items-center gap-2">
-                <MapPin className="w-4 h-4 text-primary" />
-                Spain
-              </div>
-              <div className="flex items-center gap-2">
-                <Code className="w-4 h-4 text-primary" />
-                Salesforce developer
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+      <h1 className="cb-hero-title">
+        <span className="cb-hero-line">I design</span>
+        <span className="cb-hero-line cb-hero-emph">software systems</span>
+        <span className="cb-hero-line">that don't crumble at scale.</span>
+      </h1>
 
-      {/* Projects Section */}
-      <section id="projects" className="py-16 bg-secondary/50">
-        <div className="container mx-auto px-6">
-          <div className="text-center space-y-4 mb-12 animate-fade-in">
-            <h2 className="text-3xl lg:text-4xl font-bold text-foreground">My Projects</h2>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Here is a selection of my most outstanding projects, fell free to leave feed back.
-            </p>
-          </div>
+      <p className="cb-hero-sub">
+        Daniel Vadillo — Software Architect with 6 years across enterprise EU teams.
+        Currently leading architecture &amp; AI at <span className="cb-hi">Northius</span>.
+      </p>
 
-          <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-            {projects.map((project, index) => (
-              <div key={project.title} className="animate-fade-in-up w-full projectCardIndex" style={{ animationDelay: `${index * 0.2}s` }}>
-                <ProjectCard {...project} />
-              </div>
+      <div className="cb-hero-cta">
+        <a className="cb-btn cb-btn-primary" href={CB_PROFILE.linkedin} target="_blank" rel="noreferrer">
+          Connect on LinkedIn
+          <span className="cb-arrow">→</span>
+        </a>
+        <a className="cb-btn" href="#cb-projects">See my work</a>
+      </div>
+
+      <div className="cb-hero-corner cb-corner-tl" />
+      <div className="cb-hero-corner cb-corner-tr" />
+      <div className="cb-hero-corner cb-corner-bl" />
+      <div className="cb-hero-corner cb-corner-br" />
+    </section>
+  );
+}
+
+function CBStat({ stat, start, delay }: { stat: typeof CB_STATS[number]; start: boolean; delay: number }) {
+  const [ready, setReady] = useState(false);
+  useEffect(() => {
+    if (!start) return;
+    const t = setTimeout(() => setReady(true), delay);
+    return () => clearTimeout(t);
+  }, [start, delay]);
+  const v = useCounter(stat.value, ready);
+  return (
+    <div className={`cb-stat ${ready ? "in" : ""}`}>
+      <div className="cb-stat-num">{v}<span className="cb-stat-suffix">{stat.suffix}</span></div>
+      <div className="cb-stat-label">{stat.label}</div>
+    </div>
+  );
+}
+
+function CBStats() {
+  const ref = useRef<HTMLElement | null>(null);
+  const [seen, setSeen] = useState(false);
+  useEffect(() => {
+    const io = new IntersectionObserver(([e]) => e.isIntersecting && setSeen(true), { threshold: 0.4 });
+    if (ref.current) io.observe(ref.current);
+    return () => io.disconnect();
+  }, []);
+  return (
+    <section ref={ref} className="cb-stats">
+      {CB_STATS.map((s, i) => <CBStat key={i} stat={s} start={seen} delay={i * 120} />)}
+    </section>
+  );
+}
+
+function CBProject({ project, index }: { project: Project; index: number }) {
+  const [hover, setHover] = useState(false);
+  const [imgIdx, setImgIdx] = useState(0);
+  const [dragX, setDragX] = useState(0);
+  const [animating, setAnimating] = useState(false);
+  const [userInteracted, setUserInteracted] = useState(false);
+  const frameRef = useRef<HTMLDivElement | null>(null);
+  const [frameWidth, setFrameWidth] = useState(0);
+  const dragRef = useRef<{ startX: number; active: boolean; pointerId: number; moved: boolean } | null>(null);
+  const total = project.images.length;
+
+  useEffect(() => {
+    const el = frameRef.current;
+    if (!el) return;
+    const update = () => setFrameWidth(el.offsetWidth);
+    update();
+    const ro = new ResizeObserver(update);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (!hover || userInteracted) return;
+    if (dragRef.current?.active) return;
+    const id = setInterval(() => setImgIdx((i) => (i + 1) % total), 1300);
+    return () => clearInterval(id);
+  }, [hover, total, userInteracted]);
+
+  const goTo = (i: number) => {
+    setUserInteracted(true);
+    setImgIdx(((i % total) + total) % total);
+  };
+
+  const onPointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
+    if ((e.target as HTMLElement).closest("button")) return;
+    if (animating) return;
+    (e.currentTarget as HTMLDivElement).setPointerCapture(e.pointerId);
+    dragRef.current = { startX: e.clientX, active: true, pointerId: e.pointerId, moved: false };
+    setDragX(0);
+  };
+  const onPointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (!dragRef.current?.active) return;
+    const dx = e.clientX - dragRef.current.startX;
+    if (Math.abs(dx) > 3) dragRef.current.moved = true;
+    setDragX(dx);
+  };
+  const onPointerEnd = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (!dragRef.current?.active) return;
+    const dx = e.clientX - dragRef.current.startX;
+    dragRef.current.active = false;
+    const threshold = Math.min(60, frameWidth * 0.15);
+    setUserInteracted(true);
+    setAnimating(true);
+    if (dx <= -threshold) {
+      setDragX(-frameWidth);
+    } else if (dx >= threshold) {
+      setDragX(frameWidth);
+    } else {
+      setDragX(0);
+    }
+  };
+  const onTransitionEnd = () => {
+    if (!animating) return;
+    if (dragX <= -frameWidth + 1) {
+      setImgIdx((i) => (i + 1) % total);
+    } else if (dragX >= frameWidth - 1) {
+      setImgIdx((i) => (i - 1 + total) % total);
+    }
+    setDragX(0);
+    setAnimating(false);
+  };
+
+  const reverse = index % 2 === 1;
+  const dragging = !!dragRef.current?.active;
+  const showAdjacent = dragging || animating;
+  const prevIdx = (imgIdx - 1 + total) % total;
+  const nextIdx = (imgIdx + 1) % total;
+
+  return (
+    <article
+      className={`cb-project ${reverse ? "reverse" : ""} ${project.isMobile ? "is-mobile" : ""}`}
+      onMouseEnter={() => setHover(true)}
+      onMouseLeave={() => { setHover(false); }}
+    >
+      <div className="cb-proj-visual">
+        <div
+          ref={frameRef}
+          className="cb-proj-frame"
+          onPointerDown={onPointerDown}
+          onPointerMove={onPointerMove}
+          onPointerUp={onPointerEnd}
+          onPointerCancel={onPointerEnd}
+          style={{ touchAction: "pan-y", cursor: dragging ? "grabbing" : "grab" }}
+        >
+          {project.images.map((src, i) => {
+            let translate = 0;
+            let visible = false;
+            if (i === imgIdx) { translate = dragX; visible = true; }
+            else if (showAdjacent && i === nextIdx) { translate = dragX + frameWidth; visible = true; }
+            else if (showAdjacent && i === prevIdx) { translate = dragX - frameWidth; visible = true; }
+            const onEnd = i === imgIdx ? onTransitionEnd : undefined;
+            return (
+              <img
+                key={src}
+                src={src}
+                alt=""
+                loading="lazy"
+                draggable={false}
+                onTransitionEnd={onEnd}
+                style={{
+                  opacity: visible ? 1 : 0,
+                  transform: `translateX(${translate}px)`,
+                  transition: dragging ? "none" : "transform .3s ease, opacity .3s ease",
+                  pointerEvents: "none",
+                }}
+              />
+            );
+          })}
+          <div className="cb-proj-bp" />
+          <div className="cb-proj-dots">
+            {project.images.map((_, i) => (
+              <button
+                key={i}
+                type="button"
+                className={`cb-proj-dot ${i === imgIdx ? "is-active" : ""}`}
+                onClick={() => goTo(i)}
+                aria-label={`Show image ${i + 1}`}
+              />
             ))}
           </div>
         </div>
-      </section>
-
-      {/* Experience Section */}
-      <section id="experience" className="py-16 bg-secondary/30">
-        <div className="container mx-auto px-6">
-          <div className="text-center space-y-4 mb-12 animate-fade-in">
-            <h2 className="text-3xl lg:text-4xl font-bold text-foreground">Experience</h2>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">A brief overview of my professional journey and key skills acquired.</p>
-          </div>
-          <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 animate-fade-in-up">
-            {experience.map((exp, idx) => (
-              <div key={exp.name} className="bg-card rounded-lg shadow p-6 flex flex-col items-center border border-border text-center">
-                <div className="mb-4">{exp.logo}</div>
-                <h3 className="text-lg font-semibold text-foreground mb-1">{exp.name}</h3>
-                <p className="text-sm text-muted-foreground mb-2">{exp.period}</p>
-                <p className="text-base text-foreground">{exp.skills}</p>
-              </div>
-            ))}
-          </div>
+        <div className="cb-proj-thumbs">
+          {project.images.map((src, i) => (
+            <button
+              key={src}
+              type="button"
+              className={`cb-proj-thumb ${i === imgIdx ? "is-active" : ""}`}
+              onClick={() => goTo(i)}
+              aria-label={`Image ${i + 1}`}
+            >
+              <img src={src} alt="" loading="lazy" />
+            </button>
+          ))}
         </div>
-      </section>
+        <div className="cb-proj-index">PROJECT / 0{index + 1}</div>
+      </div>
 
-      {/* Skills Section */}
-      <section id="skills" className="py-16 bg-background">
-        <div className="container mx-auto px-6">
-          <div className="text-center space-y-4 mb-12 animate-fade-in">
-            <h2 className="text-3xl lg:text-4xl font-bold text-foreground">Technical Skills</h2>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Technologies and tools I master to create robust and scalable applications.
-            </p>
+      <div className="cb-proj-content">
+        <div className="cb-proj-tag">{project.tagline}</div>
+        <h3 className="cb-proj-title">
+          {project.title}
+          {project.live && <span className="cb-proj-badge cb-proj-badge-live" title="Currently live">Live</span>}
+          {project.aiFree && <span className="cb-proj-badge" title="No AI involved in this build">AI-free</span>}
+        </h3>
+        <p className="cb-proj-desc">{project.desc}</p>
+
+        <dl className="cb-proj-meta">
+          {project.metrics.map((m) => (
+            <div key={m.k} className="cb-meta-row">
+              <dt>{m.k}</dt>
+              <dd>{m.v}</dd>
+            </div>
+          ))}
+          <div className="cb-meta-row">
+            <dt>stack</dt>
+            <dd>{project.stack.join(" · ")}</dd>
           </div>
+        </dl>
 
-          <div className="max-w-4xl mx-auto">
-            <div className="flex flex-wrap justify-center gap-3 animate-fade-in-up">
-              {skills.map((skill, index) => (
-                <div key={skill.skill} style={{ animationDelay: `${index * 0.1}s` }}>
-                  <SkillBadge {...skill} />
+        {project.href ? (
+          <a className="cb-proj-link" href={project.href} target="_blank" rel="noreferrer">
+            {project.url} <span className="cb-arrow">↗</span>
+          </a>
+        ) : (
+          <span className="cb-proj-link cb-proj-link-muted">{project.url}</span>
+        )}
+      </div>
+    </article>
+  );
+}
+
+function CBTimeline() {
+  const ref = useRef<HTMLDivElement | null>(null);
+  const [progress, setProgress] = useState(0);
+  useEffect(() => {
+    const onScroll = () => {
+      const el = ref.current;
+      if (!el) return;
+      const r = el.getBoundingClientRect();
+      const vh = window.innerHeight;
+      const total = r.height + vh * 0.4;
+      const passed = Math.max(0, vh - r.top);
+      setProgress(Math.min(1, Math.max(0, passed / total)));
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+  return (
+    <div ref={ref} className="cb-timeline">
+      <div className="cb-tl-spine">
+        <div className="cb-tl-spine-fill" style={{ height: `${progress * 100}%` }} />
+      </div>
+      {CB_TIMELINE.map((item, i) => (
+        <div key={i} className={`cb-tl-item ${item.current ? "is-current" : ""}`} style={{ transitionDelay: `${i * 50}ms` }}>
+          <div className="cb-tl-year">
+            {item.year}
+            {item.current && <span className="cb-tl-now">Now</span>}
+          </div>
+          <div className="cb-tl-marker" />
+          <div className="cb-tl-card">
+            <div className="cb-tl-card-head">
+              {item.logo ? (
+                <div className="cb-tl-logo"><img src={item.logo} alt={item.company} /></div>
+              ) : (
+                <div className="cb-tl-logo cb-tl-logo-placeholder" aria-label="logo placeholder">
+                  <span>{item.company?.[0] || "?"}</span>
                 </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Certifications Section */}
-      <section id="certifications" className="py-16 bg-secondary/30">
-        <div className="container mx-auto px-6">
-          <div className="text-center space-y-4 mb-12 animate-fade-in">
-            <h2 className="text-3xl lg:text-4xl font-bold text-foreground">Certifications</h2>
-          </div>
-
-          <div className="max-w-4xl mx-auto flex flex-wrap justify-center gap-6 animate-fade-in-up">
-            {certifications.map((cert, index) => (
-              <div key={cert.name} className="animate-fade-in-up" style={{ animationDelay: `${index * 0.15}s` }}>
-                <img 
-                  src={cert.imageUrl} 
-                  alt={cert.name} 
-                  className="h-24 w-auto object-contain mx-auto"
-                />
+              )}
+              <div>
+                <div className="cb-tl-company">{item.company}</div>
+                <div className="cb-tl-role">{item.role}</div>
               </div>
-            ))}
+            </div>
+            {item.period && <div className="cb-tl-period">{item.period}{item.location ? ` · ${item.location}` : ""}</div>}
+            <div className="cb-tl-note">{item.note}</div>
           </div>
         </div>
-      </section>
+      ))}
+    </div>
+  );
+}
 
-      {/* Contact Section */}
-      <section id="contact" className="py-16 bg-gradient-hero">
-        <div className="container mx-auto px-6">
-          <div className="max-w-2xl mx-auto text-center space-y-8 animate-fade-in">
-            <h2 className="text-3xl lg:text-4xl font-bold text-foreground">Do you have a project in mind?</h2>
-            <p className="text-lg text-muted-foreground">I am always open to new opportunities and collaborations. Do not hesitate to contact me!</p>
+function CBCerts() {
+  return (
+    <div className="cb-certs">
+      {CB_CERTS.map((c, i) => (
+        <div key={c.name} className={`cb-cert tier-${c.tier}`} style={{ animationDelay: `${i * 60}ms` }}>
+          <div className="cb-cert-img-wrap">
+            {c.img ? (
+              <img src={c.img} alt={c.name} loading="lazy" />
+            ) : (
+              <div className="cb-cert-placeholder" aria-label="Salesforce certification logo placeholder">
+                <span>SF</span>
+              </div>
+            )}
+          </div>
+          <div className="cb-cert-tier">{c.tier}</div>
+          <div className="cb-cert-name">{c.name}</div>
+          <div className="cb-cert-year">{c.year}</div>
+        </div>
+      ))}
+    </div>
+  );
+}
 
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button variant="hero" size="lg" onClick={() => window.open("https://www.linkedin.com/in/daniel-vadillo-rand-8b95b11b6/", "_blank")}>
-                <Linkedin className="w-4 h-4" />
-                LinkedIn
-              </Button>
-              <Button variant="outline" size="lg" onClick={() => window.open("mailto:contact@danielvadillo.dev", "_blank")}>
-                <Mail className="w-4 h-4" />
-                Email
-              </Button>
+function CBSection({ id, num, kicker, title, sub, children }: { id: string; num: string; kicker: string; title: string; sub?: string; children: React.ReactNode }) {
+  return (
+    <section id={id} className="cb-section">
+      <div className="cb-section-head">
+        <div className="cb-section-num">{num}</div>
+        <div className="cb-section-kicker">{kicker}</div>
+        <h2 className="cb-section-title">{title}</h2>
+        {sub && <p className="cb-section-sub">{sub}</p>}
+      </div>
+      {children}
+    </section>
+  );
+}
+
+const Index = () => {
+  return (
+    <div className="cb-root">
+      <div className="cb-bg-grid" />
+      <div className="cb-bg-vignette" />
+
+      <header className="cb-nav">
+        <div className="cb-nav-brand">
+          <span className="cb-nav-logo">DV</span>
+          <div className="cb-nav-name">
+            <span>Daniel Vadillo</span>
+            <span className="cb-nav-role">{CB_PROFILE.role}</span>
+          </div>
+        </div>
+        <nav className="cb-nav-links">
+          <a href="#cb-projects">Projects</a>
+          <a href="#cb-experience">Experience</a>
+          <a href="#cb-certs">Certifications</a>
+          <a href={CB_PROFILE.linkedin} target="_blank" rel="noreferrer" className="cb-nav-cta">LinkedIn →</a>
+        </nav>
+      </header>
+
+      <main className="cb-main">
+        <CBHero />
+        <CBStats />
+
+        <CBSection id="cb-projects" num="01" kicker="Side projects" title="Things I ship on weekends." sub="Each one has been live, built solo end-to-end.">
+          <div className="cb-projects">
+            {CB_PROJECTS.map((p, i) => <CBProject key={p.title} project={p} index={i} />)}
+          </div>
+        </CBSection>
+
+        <CBSection id="cb-experience" num="02" kicker="Career" title="Six years, three chapters." sub="Each step deeper into systems architecture.">
+          <CBTimeline />
+        </CBSection>
+
+        <CBSection id="cb-certs" num="03" kicker="Trust marks" title="Three distinct architecture domains." sub="Application, Data, Integration — the credentials behind the practice.">
+          <CBCerts />
+        </CBSection>
+
+        <section className="cb-cta">
+          <div className="cb-cta-inner">
+            <div className="cb-cta-kicker">Let's talk</div>
+            <h2 className="cb-cta-title">Need an architect who's actually shipped?</h2>
+            <p className="cb-cta-sub">Open to software architecture, platform, and AI integration work.</p>
+            <div className="cb-cta-row">
+              <a className="cb-btn cb-btn-primary" href={CB_PROFILE.linkedin} target="_blank" rel="noreferrer">
+                Connect on LinkedIn <span className="cb-arrow">→</span>
+              </a>
+              <a className="cb-btn" href={`mailto:${CB_PROFILE.email}`}>{CB_PROFILE.email}</a>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Footer */}
-      <footer className="py-8 bg-background border-t border-border">
-        <div className="container mx-auto px-6">
-          <div className="text-center text-muted-foreground">
-            <p>Have a good day :)</p>
-          </div>
-        </div>
-      </footer>
+        <footer className="cb-footer">
+          <span>© {new Date().getFullYear()} Daniel Vadillo</span>
+          <span>·</span>
+          <span>Spain</span>
+          <span>·</span>
+          <a href={CB_PROFILE.linkedin} target="_blank" rel="noreferrer">LinkedIn</a>
+        </footer>
+      </main>
     </div>
   );
 };
