@@ -574,6 +574,9 @@
 .cb-tl-company { font-size: 11px; font-family: 'Geist Mono', monospace; color: var(--cb-fg-mute); text-transform: uppercase; letter-spacing: 0.08em; }
 .cb-tl-role { font-size: 18px; font-weight: 600; color: var(--cb-fg); margin: 4px 0 8px; letter-spacing: -0.01em; }
 .cb-tl-note { font-size: 14px; color: var(--cb-fg-dim); line-height: 1.55; }
+.cb-tl-bullets { margin: 10px 0 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 6px; }
+.cb-tl-bullets li { position: relative; padding-left: 16px; font-size: 13.5px; color: var(--cb-fg-dim); line-height: 1.5; }
+.cb-tl-bullets li::before { content: ""; position: absolute; left: 2px; top: 7px; width: 5px; height: 5px; background: var(--cb-blue); transform: rotate(45deg); opacity: 0.75; }
 
 /* ----- CERTS ----- */
 .cb-certs {

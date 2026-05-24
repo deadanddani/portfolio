@@ -24,6 +24,7 @@ type TimelineItem = {
   company: string;
   role: string;
   note: string;
+  bullets?: string[];
   logo: string;
   location?: string;
   period: string;
@@ -31,7 +32,22 @@ type TimelineItem = {
 };
 
 const CB_TIMELINE: TimelineItem[] = [
-  { year: "2025", company: "Northius", role: "Senior Salesforce Engineer", note: "Architecture, integration, and AI initiatives across the EdTech platform.", logo: asset("assets/northius.jfif"), location: "Madrid · Remote", period: "May 2025 — present", current: true },
+  {
+    year: "2025",
+    company: "Northius",
+    role: "Senior Salesforce Engineer",
+    note: "As a Senior Software Engineer, I am responsible for designing and delivering scalable backend solutions focused on observability, reliability, and long-term maintainability.",
+    bullets: [
+      "Implementing end-to-end observability solutions for centralized logging, monitoring, and operational visibility across distributed systems.",
+      "Designing and developing microservices and integrations between internal and external platforms.",
+      "Building resilient and sustainable systems capable of handling high traffic volumes.",
+      "Improving delivery workflows, increasing reliability, and supporting continuous improvement practices.",
+    ],
+    logo: asset("assets/northius.jfif"),
+    location: "Madrid · Remote",
+    period: "May 2025 — present",
+    current: true,
+  },
   { year: "2024", company: "CoverWallet (Aon)", role: "Mid Salesforce Developer", note: "Event-driven integrations on insurance flows for the EU market — designing how Salesforce talks to internal microservices in near real time.", logo: asset("assets/coverwallet.png"), location: "Hybrid", period: "Sept 2024 — May 2025" },
   { year: "2023", company: "CoverWallet (Aon)", role: "Junior Salesforce Developer", note: "Joined to focus on integration between Salesforce and internal microservices.", logo: asset("assets/coverwallet.png"), location: "Hybrid", period: "Mar 2023 — Oct 2024" },
   { year: "2020", company: "IZERTIS", role: "Salesforce Developer", note: "First chapter — integration projects across multiple enterprise clients, production support, and releases.", logo: asset("assets/izertis.png"), period: "Jun 2020 — Apr 2023" },
@@ -636,6 +652,11 @@ function CBTimeline() {
             </div>
             {item.period && <div className="cb-tl-period">{item.period}{item.location ? ` · ${item.location}` : ""}</div>}
             <div className="cb-tl-note">{item.note}</div>
+            {item.bullets && (
+              <ul className="cb-tl-bullets">
+                {item.bullets.map((b, bi) => <li key={bi}>{b}</li>)}
+              </ul>
+            )}
           </div>
         </div>
       ))}
@@ -695,8 +716,8 @@ const Index = () => {
           </div>
         </div>
         <nav className="cb-nav-links">
-          <a href="#cb-projects">Projects</a>
           <a href="#cb-experience">Experience</a>
+          <a href="#cb-projects">Projects</a>
           <a href="#cb-certs">Certifications</a>
           <a href={CB_PROFILE.linkedin} target="_blank" rel="noreferrer" className="cb-nav-cta">LinkedIn →</a>
         </nav>
@@ -706,14 +727,14 @@ const Index = () => {
         <CBHero />
         <CBStats />
 
-        <CBSection id="cb-projects" num="01" kicker="Side projects" title="Things I ship on weekends." sub="Each one has been live, built solo end-to-end.">
+        <CBSection id="cb-experience" num="01" kicker="Career" title="Six years, three chapters." sub="Each step deeper into systems architecture.">
+          <CBTimeline />
+        </CBSection>
+
+        <CBSection id="cb-projects" num="02" kicker="Side projects" title="Things I ship on weekends." sub="Each one has been live, built solo end-to-end.">
           <div className="cb-projects">
             {CB_PROJECTS.map((p, i) => <CBProject key={p.title} project={p} index={i} />)}
           </div>
-        </CBSection>
-
-        <CBSection id="cb-experience" num="02" kicker="Career" title="Six years, three chapters." sub="Each step deeper into systems architecture.">
-          <CBTimeline />
         </CBSection>
 
         <CBSection id="cb-certs" num="03" kicker="Trust marks" title="Three distinct architecture domains." sub="Application, Data, Integration — the credentials behind the practice.">
