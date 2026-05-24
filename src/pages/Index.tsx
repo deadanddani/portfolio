@@ -38,6 +38,7 @@ const CB_TIMELINE: TimelineItem[] = [
     role: "Senior Salesforce Engineer",
     note: "As a Senior Software Engineer, I am responsible for designing and delivering scalable backend solutions focused on observability, reliability, and long-term maintainability.",
     bullets: [
+      "Leveraging AI-driven workflows to enhance software development processes, improving productivity and efficiency while maintaining high standards of code quality and system reliability.",
       "Implementing end-to-end observability solutions for centralized logging, monitoring, and operational visibility across distributed systems.",
       "Designing and developing microservices and integrations between internal and external platforms.",
       "Building resilient and sustainable systems capable of handling high traffic volumes.",
@@ -48,8 +49,21 @@ const CB_TIMELINE: TimelineItem[] = [
     period: "May 2025 — present",
     current: true,
   },
-  { year: "2024", company: "CoverWallet (Aon)", role: "Mid Salesforce Developer", note: "Event-driven integrations on insurance flows for the EU market — designing how Salesforce talks to internal microservices in near real time.", logo: asset("assets/coverwallet.png"), location: "Hybrid", period: "Sept 2024 — May 2025" },
-  { year: "2023", company: "CoverWallet (Aon)", role: "Junior Salesforce Developer", note: "Joined to focus on integration between Salesforce and internal microservices.", logo: asset("assets/coverwallet.png"), location: "Hybrid", period: "Mar 2023 — Oct 2024" },
+  {
+    year: "2023",
+    company: "CoverWallet (Aon)",
+    role: "Mid Salesforce Developer",
+    note: "As a Mid Salesforce Developer, I worked in a highly skilled engineering environment where I had the opportunity to learn from experienced professionals while contributing to end-to-end feature development.",
+    bullets: [
+      "Developed and delivered complete Salesforce-based solutions.",
+      "Worked within established engineering processes, quickly adapting to existing workflows, standards, and team practices.",
+      "Gained a strong understanding of how high-performing engineering teams operate, including planning, collaboration, code reviews, and delivery management.",
+      "Contributed to a microservices-based architecture with event-driven communication between systems, ensuring scalable, decoupled, and resilient integrations.",
+    ],
+    logo: asset("assets/coverwallet.png"),
+    location: "Hybrid",
+    period: "Mar 2023 — May 2025",
+  },
   { year: "2020", company: "IZERTIS", role: "Salesforce Developer", note: "First chapter — integration projects across multiple enterprise clients, production support, and releases.", logo: asset("assets/izertis.png"), period: "Jun 2020 — Apr 2023" },
 ];
 
