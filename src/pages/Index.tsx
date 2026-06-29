@@ -99,21 +99,6 @@ const CB_PROJECTS: Project[] = [
     images: [asset("assets/mcp-1.png")],
   },
   {
-    title: "Polymarket Edge Bot",
-    tagline: "Front-running BTC sentiment, programmatically.",
-    desc: "A Rust-powered bot that ingests live Bitcoin order-book and on-chain signals, models short-horizon probabilities, and places positions on Polymarket before the market reprices. Backed by a statistical pipeline and simulations to validate real-world edge before any capital goes in.",
-    url: "Personal · Quant experiment",
-    href: "",
-    stack: ["Rust", "WebSockets", "Statistics & simulations", "Polymarket API", "On-chain data"],
-    metrics: [
-      { k: "domain", v: "Crypto · Prediction markets" },
-      { k: "loop", v: "Real-time" },
-      { k: "validation", v: "Simulated PnL" },
-    ],
-    live: true,
-    images: [asset("assets/polybot-1.png"), asset("assets/polybot-2.png"), asset("assets/polybot-3.png")],
-  },
-  {
     title: "Find Me Today",
     tagline: "A daily geography duel.",
     desc: "Players race against friends to pinpoint a random location on the planet, every single day. Built solo end-to-end.",
@@ -159,6 +144,21 @@ const CB_PROJECTS: Project[] = [
     metrics: [{ k: "engine", v: "LLM-backed" }, { k: "status", v: "Live" }],
     live: true,
     images: [asset("assets/tripplanner-1.png"), asset("assets/tripplanner-2.png"), asset("assets/tripplanner-3.png")],
+  },
+  {
+    title: "Polymarket Edge Bot",
+    tagline: "Front-running BTC sentiment, programmatically.",
+    desc: "A Rust-powered bot that ingests live Bitcoin order-book and on-chain signals, models short-horizon probabilities, and places positions on Polymarket before the market reprices. Backed by a statistical pipeline and simulations to validate real-world edge before any capital goes in.",
+    url: "Personal · Quant experiment",
+    href: "",
+    stack: ["Rust", "WebSockets", "Statistics & simulations", "Polymarket API", "On-chain data"],
+    metrics: [
+      { k: "domain", v: "Crypto · Prediction markets" },
+      { k: "loop", v: "Real-time" },
+      { k: "validation", v: "Simulated PnL" },
+    ],
+    live: true,
+    images: [asset("assets/polybot-1.png"), asset("assets/polybot-2.png"), asset("assets/polybot-3.png")],
   },
 ];
 
