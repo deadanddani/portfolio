@@ -84,6 +84,22 @@ type Project = {
 
 const CB_PROJECTS: Project[] = [
   {
+    title: "HackTheLink",
+    tagline: "Auto-solves LinkedIn puzzle games, locally.",
+    desc: "A Chrome extension that reads the current LinkedIn Games puzzle straight off the page and solves it in your browser — no servers, no external calls, no data leaving the tab. Published on the Chrome Web Store and running fully client-side, so the whole solve happens locally and privately.",
+    url: "chromewebstore.google.com/detail/hackthelink",
+    href: "https://chromewebstore.google.com/detail/hackthelink/cnjbclmejcnobblbdnagogijahpndmpa",
+    stack: ["Chrome Extension", "TypeScript", "DOM parsing", "Solver"],
+    metrics: [
+      { k: "platform", v: "Chrome Web Store" },
+      { k: "privacy", v: "100% local" },
+      { k: "status", v: "Live" },
+    ],
+    live: true,
+    aiFree: true,
+    images: [asset("assets/hackthelink-1.jpg"), asset("assets/hackthelink-2.jpg"), asset("assets/hackthelink-3.jpg"), asset("assets/hackthelink-4.jpg")],
+  },
+  {
     title: "MCPs for Salesforce CLI",
     tagline: "Safe AI interactions with Salesforce orgs.",
     desc: "Open-source set of Model Context Protocol servers that lets AI assistants interact with Salesforce environments in a safe, controlled way. Production and any environment you flag are hard-blocked, so the model can act against orgs without putting sensitive data or live deployments at risk. Already adopted by a large part of my team for day-to-day Salesforce work.",
