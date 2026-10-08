@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1" />
     <title>Daniel Vadillo — Software Architect</title>
     <meta name="description" content="Software Architect. 6 years designing and shipping platforms across enterprise EU teams. Currently leading architecture & AI at Northius." />
     <meta name="author" content="Daniel Vadillo" />
@@ -27,5 +27,36 @@
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
+
+    <!-- Record Embedded Messaging lifecycle events in case they fire before React mounts (read by ChatLauncher). -->
+    <script type="text/javascript">
+      window.__chatState = { ready: false, open: false };
+      window.addEventListener('onEmbeddedMessagingButtonCreated', function () { window.__chatState.ready = true; });
+      window.addEventListener('onEmbeddedMessagingWindowMaximized', function () { window.__chatState.open = true; });
+      window.addEventListener('onEmbeddedMessagingWindowClosed', function () { window.__chatState.open = false; });
+    </script>
+
+    <!-- Salesforce Enhanced Chat -->
+    <script type='text/javascript'>
+        function initEmbeddedMessaging() {
+            try {
+                embeddedservice_bootstrap.settings.language = 'es';
+                // Default floating button is replaced by the site's own ChatLauncher.
+                embeddedservice_bootstrap.settings.hideChatButtonOnLoad = true;
+
+                embeddedservice_bootstrap.init(
+                    '00DWU00000tQVep',
+                    'web_CV',
+                    'https://northius2-dev-ed.develop.my.site.com/ESWwebCV1791474130383',
+                    {
+                        scrt2URL: 'https://northius2-dev-ed.develop.my.salesforce-scrt.com'
+                    }
+                );
+            } catch (err) {
+                console.error('Error loading Embedded Messaging: ', err);
+            }
+        };
+    </script>
+    <script type='text/javascript' src='https://northius2-dev-ed.develop.my.site.com/ESWwebCV1791474130383/assets/js/bootstrap.min.js' onload='initEmbeddedMessaging()'></script>
   </body>
 </html>

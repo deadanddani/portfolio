@@ -1,0 +1,44 @@
+/* Floating launcher for Salesforce Enhanced Chat. Reuses .cb-btn / .cb-btn-primary;
+   it lives outside .cb-root, so the tokens it needs are redeclared here. */
+.cb-chat-launcher {
+  --cb-bg: #0a0c12;
+  --cb-panel: #11141d;
+  --cb-border: #1d2230;
+  --cb-fg: #e8ecf2;
+  --cb-blue: #3b82f6;
+  --cb-blue-soft: #60a5fa;
+  --cb-blue-deep: #1d4ed8;
+
+  position: fixed;
+  right: max(24px, env(safe-area-inset-right));
+  bottom: max(24px, env(safe-area-inset-bottom));
+  /* Below the image lightbox (z-index 200) and above page content and the sticky nav (50). */
+  z-index: 150;
+  box-sizing: border-box;
+  min-height: 48px;
+  animation: cb-chat-in .3s ease-out both;
+}
+.cb-chat-launcher:focus-visible {
+  outline: 2px solid var(--cb-blue-soft);
+  outline-offset: 3px;
+}
+.cb-chat-icon { width: 18px; height: 18px; flex-shrink: 0; }
+
+/* The lightbox lives in .cb-root's stacking context, so hide the launcher while it is open. */
+body:has(.cb-lightbox) .cb-chat-launcher { display: none; }
+
+/* Opacity only: a transform keyframe would override the .cb-btn hover lift. */
+@keyframes cb-chat-in { from { opacity: 0; } to { opacity: 1; } }
+
+@media (max-width: 900px) {
+  .cb-chat-launcher {
+    right: max(16px, env(safe-area-inset-right));
+    bottom: max(16px, env(safe-area-inset-bottom));
+    padding: 12px 18px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cb-chat-launcher { animation: none; transition: none; }
+  .cb-chat-launcher:hover { transform: none; }
+}
