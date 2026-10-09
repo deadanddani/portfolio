@@ -23,6 +23,9 @@
   outline-offset: 3px;
 }
 .cb-chat-icon { width: 18px; height: 18px; flex-shrink: 0; }
+.cb-chat-launcher[aria-busy="true"] { cursor: progress; }
+.cb-chat-spin { animation: cb-chat-spin 1s linear infinite; }
+@keyframes cb-chat-spin { to { transform: rotate(360deg); } }
 
 /* The lightbox lives in .cb-root's stacking context, so hide the launcher while it is open. */
 body:has(.cb-lightbox) .cb-chat-launcher { display: none; }
@@ -41,4 +44,5 @@ body:has(.cb-lightbox) .cb-chat-launcher { display: none; }
 @media (prefers-reduced-motion: reduce) {
   .cb-chat-launcher { animation: none; transition: none; }
   .cb-chat-launcher:hover { transform: none; }
+  .cb-chat-spin { animation-duration: 3s; }
 }
