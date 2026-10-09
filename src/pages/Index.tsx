@@ -1,33 +1,37 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import "@/styles/cinematic-blueprint.css";
+import { LANGS, useLang, type Text } from "@/i18n";
 
 const BASE = import.meta.env.BASE_URL;
 const asset = (p: string) => `${BASE}${p}`;
 
 const CB_PROFILE = {
   name: "Daniel Vadillo",
-  role: "Software Architect",
+  role: { en: "Software Architect", es: "Arquitecto de software" },
   tagline: "I design systems that don't crumble at scale.",
   email: "daniel.vadillo.1q@gmail.com",
   linkedin: "https://www.linkedin.com/in/daniel-vadillo-rand-8b95b11b6/",
 };
 
-const CB_STATS = [
-  { value: 6, suffix: "", label: "Years designing & shipping software" },
-  { value: 9, suffix: "", label: "Certifications" },
-  { value: 5, suffix: "", label: "Side projects shipped" },
-  { value: 3, suffix: "", label: "Architecture principles I live by" },
+const LIVE: Text = { en: "Live", es: "Activo" };
+const CONNECT_LINKEDIN: Text = { en: "Connect on LinkedIn", es: "Conecta en LinkedIn" };
+
+const CB_STATS: { value: number; suffix: string; label: Text }[] = [
+  { value: 6, suffix: "", label: { en: "Years designing & shipping software", es: "Años diseñando y entregando software" } },
+  { value: 9, suffix: "", label: { en: "Certifications", es: "Certificaciones" } },
+  { value: 5, suffix: "", label: { en: "Side projects shipped", es: "Proyectos personales lanzados" } },
+  { value: 3, suffix: "", label: { en: "Architecture principles I live by", es: "Principios de arquitectura que sigo" } },
 ];
 
 type TimelineItem = {
   year: string;
   company: string;
-  role: string;
-  note: string;
-  bullets?: string[];
+  role: Text;
+  note: Text;
+  bullets?: Text[];
   logo: string;
-  location?: string;
-  period: string;
+  location?: Text;
+  period: Text;
   current?: boolean;
 };
 
@@ -35,46 +39,89 @@ const CB_TIMELINE: TimelineItem[] = [
   {
     year: "2025",
     company: "Northius",
-    role: "Senior Salesforce Engineer",
-    note: "As a Senior Software Engineer, I am responsible for designing and delivering scalable backend solutions focused on observability, reliability, and long-term maintainability.",
+    role: { en: "Senior Salesforce Engineer", es: "Ingeniero Salesforce sénior" },
+    note: {
+      en: "As a Senior Software Engineer, I am responsible for designing and delivering scalable backend solutions focused on observability, reliability, and long-term maintainability.",
+      es: "Como Senior Software Engineer, soy responsable de diseñar y entregar soluciones backend escalables centradas en la observabilidad, la fiabilidad y la mantenibilidad a largo plazo.",
+    },
     bullets: [
-      "Leveraging AI-driven workflows to enhance software development processes, improving productivity and efficiency while maintaining high standards of code quality and system reliability.",
-      "Implementing end-to-end observability solutions for centralized logging, monitoring, and operational visibility across distributed systems.",
-      "Designing and developing microservices and integrations between internal and external platforms.",
-      "Building resilient and sustainable systems capable of handling high traffic volumes.",
-      "Improving delivery workflows, increasing reliability, and supporting continuous improvement practices.",
+      {
+        en: "Leveraging AI-driven workflows to enhance software development processes, improving productivity and efficiency while maintaining high standards of code quality and system reliability.",
+        es: "Aprovecho flujos de trabajo basados en IA para mejorar los procesos de desarrollo de software, aumentando la productividad y la eficiencia sin renunciar a altos estándares de calidad del código y fiabilidad de los sistemas.",
+      },
+      {
+        en: "Implementing end-to-end observability solutions for centralized logging, monitoring, and operational visibility across distributed systems.",
+        es: "Implemento soluciones de observabilidad de extremo a extremo para el registro centralizado, la monitorización y la visibilidad operativa en sistemas distribuidos.",
+      },
+      {
+        en: "Designing and developing microservices and integrations between internal and external platforms.",
+        es: "Diseño y desarrollo microservicios e integraciones entre plataformas internas y externas.",
+      },
+      {
+        en: "Building resilient and sustainable systems capable of handling high traffic volumes.",
+        es: "Construyo sistemas resilientes y sostenibles capaces de gestionar grandes volúmenes de tráfico.",
+      },
+      {
+        en: "Improving delivery workflows, increasing reliability, and supporting continuous improvement practices.",
+        es: "Mejoro los flujos de entrega, aumentando la fiabilidad e impulsando prácticas de mejora continua.",
+      },
     ],
     logo: asset("assets/northius.jfif"),
-    location: "Madrid · Remote",
-    period: "May 2025 — present",
+    location: { en: "Madrid · Remote", es: "Madrid · Remoto" },
+    period: { en: "May 2025 — present", es: "may 2025 — actualidad" },
     current: true,
   },
   {
     year: "2023",
     company: "CoverWallet (Aon)",
-    role: "Mid Salesforce Developer",
-    note: "As a Mid Salesforce Developer, I worked in a highly skilled engineering environment where I had the opportunity to learn from experienced professionals while contributing to end-to-end feature development.",
+    role: { en: "Mid Salesforce Developer", es: "Desarrollador Salesforce (Mid)" },
+    note: {
+      en: "As a Mid Salesforce Developer, I worked in a highly skilled engineering environment where I had the opportunity to learn from experienced professionals while contributing to end-to-end feature development.",
+      es: "Como Mid Salesforce Developer, trabajé en un entorno de ingeniería muy cualificado donde tuve la oportunidad de aprender de profesionales con experiencia mientras contribuía al desarrollo de funcionalidades de principio a fin.",
+    },
     bullets: [
-      "Developed and delivered complete Salesforce-based solutions.",
-      "Worked within established engineering processes, quickly adapting to existing workflows, standards, and team practices.",
-      "Gained a strong understanding of how high-performing engineering teams operate, including planning, collaboration, code reviews, and delivery management.",
-      "Contributed to a microservices-based architecture with event-driven communication between systems, ensuring scalable, decoupled, and resilient integrations.",
+      {
+        en: "Developed and delivered complete Salesforce-based solutions.",
+        es: "Desarrollé y entregué soluciones completas basadas en Salesforce.",
+      },
+      {
+        en: "Worked within established engineering processes, quickly adapting to existing workflows, standards, and team practices.",
+        es: "Trabajé dentro de procesos de ingeniería consolidados, adaptándome rápidamente a los flujos de trabajo, estándares y prácticas del equipo.",
+      },
+      {
+        en: "Gained a strong understanding of how high-performing engineering teams operate, including planning, collaboration, code reviews, and delivery management.",
+        es: "Adquirí un conocimiento sólido de cómo funcionan los equipos de ingeniería de alto rendimiento: planificación, colaboración, revisiones de código y gestión de entregas.",
+      },
+      {
+        en: "Contributed to a microservices-based architecture with event-driven communication between systems, ensuring scalable, decoupled, and resilient integrations.",
+        es: "Contribuí a una arquitectura de microservicios con comunicación basada en eventos entre sistemas, garantizando integraciones escalables, desacopladas y resilientes.",
+      },
     ],
     logo: asset("assets/coverwallet.png"),
-    location: "Hybrid",
-    period: "Mar 2023 — May 2025",
+    location: { en: "Hybrid", es: "Híbrido" },
+    period: { en: "Mar 2023 — May 2025", es: "mar 2023 — may 2025" },
   },
-  { year: "2020", company: "IZERTIS", role: "Salesforce Developer", note: "First chapter — integration projects across multiple enterprise clients, production support, and releases.", logo: asset("assets/izertis.png"), period: "Jun 2020 — Apr 2023" },
+  {
+    year: "2020",
+    company: "IZERTIS",
+    role: { en: "Salesforce Developer", es: "Desarrollador Salesforce" },
+    note: {
+      en: "First chapter — integration projects across multiple enterprise clients, production support, and releases.",
+      es: "Primer capítulo: proyectos de integración para varios clientes empresariales, soporte en producción y lanzamientos de versiones.",
+    },
+    logo: asset("assets/izertis.png"),
+    period: { en: "Jun 2020 — Apr 2023", es: "jun 2020 — abr 2023" },
+  },
 ];
 
-type ProjectMetric = { k: string; v: string };
+type ProjectMetric = { k: Text; v: Text };
 type Project = {
-  title: string;
-  tagline: string;
-  desc: string;
-  url: string;
+  title: Text;
+  tagline: Text;
+  desc: Text;
+  url: Text;
   href: string;
-  stack: string[];
+  stack: Text[];
   metrics: ProjectMetric[];
   live?: boolean;
   aiFree?: boolean;
@@ -82,18 +129,35 @@ type Project = {
   isMobile?: boolean;
 };
 
+const K = {
+  domain: { en: "domain", es: "dominio" },
+  format: { en: "format", es: "formato" },
+  status: { en: "status", es: "estado" },
+  platform: { en: "platform", es: "plataforma" },
+  privacy: { en: "privacy", es: "privacidad" },
+  safety: { en: "safety", es: "seguridad" },
+  adoption: { en: "adoption", es: "adopción" },
+  type: { en: "type", es: "tipo" },
+  engine: { en: "engine", es: "motor" },
+  loop: { en: "loop", es: "bucle" },
+  validation: { en: "validation", es: "validación" },
+} satisfies Record<string, Text>;
+
 const CB_PROJECTS: Project[] = [
   {
     title: "HackTheLink",
-    tagline: "Auto-solves LinkedIn puzzle games, locally.",
-    desc: "A Chrome extension that reads the current LinkedIn Games puzzle straight off the page and solves it in your browser — no servers, no external calls, no data leaving the tab. Published on the Chrome Web Store and running fully client-side, so the whole solve happens locally and privately.",
+    tagline: { en: "Auto-solves LinkedIn puzzle games, locally.", es: "Resuelve automáticamente los juegos de LinkedIn, en local." },
+    desc: {
+      en: "A Chrome extension that reads the current LinkedIn Games puzzle straight off the page and solves it in your browser — no servers, no external calls, no data leaving the tab. Published on the Chrome Web Store and running fully client-side, so the whole solve happens locally and privately.",
+      es: "Una extensión de Chrome que lee el puzzle actual de LinkedIn Games directamente de la página y lo resuelve en tu navegador: sin servidores, sin llamadas externas y sin que ningún dato salga de la pestaña. Publicada en la Chrome Web Store y ejecutándose íntegramente en el cliente, así que toda la resolución ocurre en local y de forma privada.",
+    },
     url: "chromewebstore.google.com/detail/hackthelink",
     href: "https://chromewebstore.google.com/detail/hackthelink/cnjbclmejcnobblbdnagogijahpndmpa",
     stack: ["Chrome Extension", "TypeScript", "DOM parsing", "Solver"],
     metrics: [
-      { k: "platform", v: "Chrome Web Store" },
-      { k: "privacy", v: "100% local" },
-      { k: "status", v: "Live" },
+      { k: K.platform, v: "Chrome Web Store" },
+      { k: K.privacy, v: { en: "100% local", es: "100% local" } },
+      { k: K.status, v: LIVE },
     ],
     live: true,
     aiFree: true,
@@ -101,84 +165,110 @@ const CB_PROJECTS: Project[] = [
   },
   {
     title: "MCPs for Salesforce CLI",
-    tagline: "Safe AI interactions with Salesforce orgs.",
-    desc: "Open-source set of Model Context Protocol servers that lets AI assistants interact with Salesforce environments in a safe, controlled way. Production and any environment you flag are hard-blocked, so the model can act against orgs without putting sensitive data or live deployments at risk. Already adopted by a large part of my team for day-to-day Salesforce work.",
+    tagline: { en: "Safe AI interactions with Salesforce orgs.", es: "Interacciones seguras de IA con orgs de Salesforce." },
+    desc: {
+      en: "Open-source set of Model Context Protocol servers that lets AI assistants interact with Salesforce environments in a safe, controlled way. Production and any environment you flag are hard-blocked, so the model can act against orgs without putting sensitive data or live deployments at risk. Already adopted by a large part of my team for day-to-day Salesforce work.",
+      es: "Conjunto open source de servidores Model Context Protocol que permite a los asistentes de IA interactuar con entornos de Salesforce de forma segura y controlada. Producción y cualquier entorno que marques quedan bloqueados, de modo que el modelo puede actuar sobre las orgs sin poner en riesgo datos sensibles ni despliegues en producción. Ya lo usa buena parte de mi equipo en su trabajo diario con Salesforce.",
+    },
     url: "github.com/deadanddani/MCPs_for_Salesforce_CLI",
     href: "https://github.com/deadanddani/MCPs_for_Salesforce_CLI",
     stack: ["TypeScript", "MCP", "Salesforce CLI", "Node.js"],
     metrics: [
-      { k: "domain", v: "Salesforce · AI tooling" },
-      { k: "safety", v: "Prod & flagged orgs blocked" },
-      { k: "adoption", v: "Used across my team" },
+      { k: K.domain, v: { en: "Salesforce · AI tooling", es: "Salesforce · Herramientas de IA" } },
+      { k: K.safety, v: { en: "Prod & flagged orgs blocked", es: "Prod y orgs marcadas bloqueadas" } },
+      { k: K.adoption, v: { en: "Used across my team", es: "Usado en todo mi equipo" } },
     ],
     live: true,
     images: [asset("assets/mcp-1.png")],
   },
   {
     title: "Find Me Today",
-    tagline: "A daily geography duel.",
-    desc: "Players race against friends to pinpoint a random location on the planet, every single day. Built solo end-to-end.",
+    tagline: { en: "A daily geography duel.", es: "Un duelo diario de geografía." },
+    desc: {
+      en: "Players race against friends to pinpoint a random location on the planet, every single day. Built solo end-to-end.",
+      es: "Los jugadores compiten con sus amigos para localizar un punto aleatorio del planeta, cada día. Desarrollado en solitario de principio a fin.",
+    },
     url: "findmetoday.es",
     href: "https://www.findmetoday.es",
     stack: ["Angular", "Astro", "TypeScript", "Geolocation API"],
-    metrics: [{ k: "format", v: "Daily challenge" }, { k: "status", v: "Live" }],
+    metrics: [{ k: K.format, v: { en: "Daily challenge", es: "Reto diario" } }, { k: K.status, v: LIVE }],
     aiFree: true,
     live: true,
     images: [asset("assets/findmetoday-1.png"), asset("assets/findmetoday-2.png"), asset("assets/findmetoday-3.png")],
   },
   {
-    title: "Find Me Today — Mobile",
-    tagline: "Native port, archived.",
-    desc: "Ionic + Capacitor port. Pulled from stores due to maintenance overhead, but a fun delivery exercise.",
-    url: "Archived",
+    title: { en: "Find Me Today — Mobile", es: "Find Me Today — Móvil" },
+    tagline: { en: "Native port, archived.", es: "Versión nativa, archivada." },
+    desc: {
+      en: "Ionic + Capacitor port. Pulled from stores due to maintenance overhead, but a fun delivery exercise.",
+      es: "Versión con Ionic + Capacitor. Retirada de las tiendas por el coste de mantenimiento, pero fue un ejercicio de entrega divertido.",
+    },
+    url: { en: "Archived", es: "Archivado" },
     href: "",
     stack: ["Ionic", "Capacitor", "Node.js"],
-    metrics: [{ k: "format", v: "Mobile" }, { k: "status", v: "Archived" }],
+    metrics: [{ k: K.format, v: { en: "Mobile", es: "Móvil" } }, { k: K.status, v: { en: "Archived", es: "Archivado" } }],
     aiFree: true,
     images: [asset("assets/findmetoday-mobile-1.webp"), asset("assets/findmetoday-mobile-2.webp"), asset("assets/findmetoday-mobile-3.webp")],
     isMobile: true,
   },
   {
     title: "Gym Tracker",
-    tagline: "A pocket logbook for the gym.",
-    desc: "Personal PWA built with Next.js — a web app that behaves like a native one on iPhone, so I can log every set, rep, and weight straight from the rack with no app store and no friction. The real win is owning the data: I can analyse it, spot plateaus, and keep iterating on the app itself. I run it for friends and family too, and I keep adding recaps and friendly competitions between us.",
+    tagline: { en: "A pocket logbook for the gym.", es: "Un cuaderno de entrenamiento de bolsillo." },
+    desc: {
+      en: "Personal PWA built with Next.js — a web app that behaves like a native one on iPhone, so I can log every set, rep, and weight straight from the rack with no app store and no friction. The real win is owning the data: I can analyse it, spot plateaus, and keep iterating on the app itself. I run it for friends and family too, and I keep adding recaps and friendly competitions between us.",
+      es: "PWA personal hecha con Next.js: una web app que se comporta como una nativa en iPhone, para registrar cada serie, repetición y peso directamente desde el rack, sin tienda de apps y sin fricción. Lo mejor es que los datos son míos: puedo analizarlos, detectar estancamientos y seguir iterando sobre la propia app. También la usan amigos y familia, y sigo añadiendo resúmenes y competiciones amistosas entre nosotros.",
+    },
     url: "Personal · PWA",
     href: "",
     stack: ["Next.js", "React", "PWA", "iOS"],
-    metrics: [{ k: "type", v: "Personal" }, { k: "platform", v: "PWA · iOS" }],
+    metrics: [{ k: K.type, v: "Personal" }, { k: K.platform, v: "PWA · iOS" }],
     live: true,
     images: [asset("assets/gymtracker-1.jpeg"), asset("assets/gymtracker-2.jpeg"), asset("assets/gymtracker-3.jpeg"), asset("assets/gymtracker-4.jpeg"), asset("assets/gymtracker-5.jpeg")],
     isMobile: true,
   },
   {
     title: "Trip Planner AI",
-    tagline: "An AI can now plan your trip.",
-    desc: "Personalised trip planning powered by an LLM. Caches popular regions for instant suggestions and SEO. To keep the project sustainable long-term, it currently runs on a budget-tier model — output quality may be degraded compared to flagship LLMs.",
+    tagline: { en: "An AI can now plan your trip.", es: "Ahora una IA puede planificar tu viaje." },
+    desc: {
+      en: "Personalised trip planning powered by an LLM. Caches popular regions for instant suggestions and SEO. To keep the project sustainable long-term, it currently runs on a budget-tier model — output quality may be degraded compared to flagship LLMs.",
+      es: "Planificación de viajes personalizada con un LLM. Cachea las regiones populares para ofrecer sugerencias instantáneas y mejorar el SEO. Para que el proyecto sea sostenible a largo plazo, ahora funciona con un modelo económico, así que la calidad de las respuestas puede ser inferior a la de los LLM de gama alta.",
+    },
     url: "tripplannerai.es",
     href: "https://www.tripplannerai.es",
     stack: ["React", "Node.js", "OpenAI", "SEO"],
-    metrics: [{ k: "engine", v: "LLM-backed" }, { k: "status", v: "Live" }],
+    metrics: [{ k: K.engine, v: { en: "LLM-backed", es: "Basado en LLM" } }, { k: K.status, v: LIVE }],
     live: true,
     images: [asset("assets/tripplanner-1.png"), asset("assets/tripplanner-2.png"), asset("assets/tripplanner-3.png")],
   },
   {
     title: "Polymarket Edge Bot",
-    tagline: "Front-running BTC sentiment, programmatically.",
-    desc: "A Rust-powered bot that ingests live Bitcoin order-book and on-chain signals, models short-horizon probabilities, and places positions on Polymarket before the market reprices. Backed by a statistical pipeline and simulations to validate real-world edge before any capital goes in.",
-    url: "Personal · Quant experiment",
+    tagline: { en: "Front-running BTC sentiment, programmatically.", es: "Anticipándose al sentimiento del BTC, de forma programática." },
+    desc: {
+      en: "A Rust-powered bot that ingests live Bitcoin order-book and on-chain signals, models short-horizon probabilities, and places positions on Polymarket before the market reprices. Backed by a statistical pipeline and simulations to validate real-world edge before any capital goes in.",
+      es: "Un bot en Rust que procesa en tiempo real señales del libro de órdenes y on-chain de Bitcoin, modela probabilidades a corto plazo y abre posiciones en Polymarket antes de que el mercado reajuste los precios. Respaldado por un pipeline estadístico y simulaciones para validar una ventaja real antes de invertir capital.",
+    },
+    url: { en: "Personal · Quant experiment", es: "Personal · Experimento cuantitativo" },
     href: "",
-    stack: ["Rust", "WebSockets", "Statistics & simulations", "Polymarket API", "On-chain data"],
+    stack: ["Rust", "WebSockets", { en: "Statistics & simulations", es: "Estadística y simulaciones" }, "Polymarket API", { en: "On-chain data", es: "Datos on-chain" }],
     metrics: [
-      { k: "domain", v: "Crypto · Prediction markets" },
-      { k: "loop", v: "Real-time" },
-      { k: "validation", v: "Simulated PnL" },
+      { k: K.domain, v: { en: "Crypto · Prediction markets", es: "Cripto · Mercados de predicción" } },
+      { k: K.loop, v: { en: "Real-time", es: "Tiempo real" } },
+      { k: K.validation, v: { en: "Simulated PnL", es: "PnL simulado" } },
     ],
     live: true,
     images: [asset("assets/polybot-1.png"), asset("assets/polybot-2.png"), asset("assets/polybot-3.png")],
   },
 ];
 
-type Cert = { name: string; img: string; tier: "architect" | "ai" | "developer"; year: string };
+type Tier = "architect" | "ai" | "developer";
+// Certification names are Salesforce's official (English) titles and are not translated.
+type Cert = { name: string; img: string; tier: Tier; year: string };
+
+const TIER_LABEL: Record<Tier, Text> = {
+  architect: { en: "architect", es: "arquitecto" },
+  ai: { en: "ai", es: "IA" },
+  developer: { en: "developer", es: "desarrollador" },
+};
 
 const CB_CERTS: Cert[] = [
   { name: "Platform Development Lifecycle & Deployment Architect", img: asset("assets/cert-deployment.png"), tier: "architect", year: "2026" },
@@ -212,6 +302,7 @@ function useCounter(target: number, start: boolean, dur = 1400) {
 }
 
 function CBHero() {
+  const { lang, t } = useLang();
   const [parallax, setParallax] = useState({ x: 0, y: 0 });
   useEffect(() => {
     const onMove = (e: MouseEvent) => {
@@ -230,26 +321,41 @@ function CBHero() {
 
       <div className="cb-hero-meta">
         <span className="cb-meta-dot" />
-        <span>Open to architecture roles · 2026</span>
+        <span>{t({ en: "Open to architecture roles · 2026", es: "Abierto a puestos de arquitectura · 2026" })}</span>
       </div>
 
-      <h1 className="cb-hero-title">
-        <span className="cb-hero-line">I design</span>
-        <span className="cb-hero-line cb-hero-emph">software systems</span>
-        <span className="cb-hero-line">that don't crumble at scale.</span>
-      </h1>
+      {lang === "es" ? (
+        <h1 className="cb-hero-title">
+          <span className="cb-hero-line">Diseño</span>
+          <span className="cb-hero-line cb-hero-emph">sistemas de software</span>
+          <span className="cb-hero-line">que no se desmoronan al escalar.</span>
+        </h1>
+      ) : (
+        <h1 className="cb-hero-title">
+          <span className="cb-hero-line">I design</span>
+          <span className="cb-hero-line cb-hero-emph">software systems</span>
+          <span className="cb-hero-line">that don't crumble at scale.</span>
+        </h1>
+      )}
 
-      <p className="cb-hero-sub">
-        Daniel Vadillo — Software Architect with 6 years across enterprise EU teams.
-        Currently leading architecture &amp; AI at <span className="cb-hi">Northius</span>.
-      </p>
+      {lang === "es" ? (
+        <p className="cb-hero-sub">
+          Daniel Vadillo — Arquitecto de software con 6 años en equipos empresariales europeos.
+          Actualmente lidero la arquitectura y la IA en <span className="cb-hi">Northius</span>.
+        </p>
+      ) : (
+        <p className="cb-hero-sub">
+          Daniel Vadillo — Software Architect with 6 years across enterprise EU teams.
+          Currently leading architecture &amp; AI at <span className="cb-hi">Northius</span>.
+        </p>
+      )}
 
       <div className="cb-hero-cta">
         <a className="cb-btn cb-btn-primary" href={CB_PROFILE.linkedin} target="_blank" rel="noreferrer">
-          Connect on LinkedIn
+          {t(CONNECT_LINKEDIN)}
           <span className="cb-arrow">→</span>
         </a>
-        <a className="cb-btn" href="#cb-projects">See my work</a>
+        <a className="cb-btn" href="#cb-projects">{t({ en: "See my work", es: "Ver mi trabajo" })}</a>
       </div>
 
       <div className="cb-hero-corner cb-corner-tl" />
@@ -261,6 +367,7 @@ function CBHero() {
 }
 
 function CBStat({ stat, start, delay }: { stat: typeof CB_STATS[number]; start: boolean; delay: number }) {
+  const { t } = useLang();
   const [ready, setReady] = useState(false);
   useEffect(() => {
     if (!start) return;
@@ -271,7 +378,7 @@ function CBStat({ stat, start, delay }: { stat: typeof CB_STATS[number]; start: 
   return (
     <div className={`cb-stat ${ready ? "in" : ""}`}>
       <div className="cb-stat-num">{v}<span className="cb-stat-suffix">{stat.suffix}</span></div>
-      <div className="cb-stat-label">{stat.label}</div>
+      <div className="cb-stat-label">{t(stat.label)}</div>
     </div>
   );
 }
@@ -292,6 +399,8 @@ function CBStats() {
 }
 
 function CBProject({ project, index }: { project: Project; index: number }) {
+  const { t } = useLang();
+  const title = t(project.title);
   const [imgIdx, setImgIdx] = useState(0);
   const [dragX, setDragX] = useState(0);
   const [animating, setAnimating] = useState(false);
@@ -500,7 +609,7 @@ function CBProject({ project, index }: { project: Project; index: number }) {
                   type="button"
                   className={`cb-proj-dot ${i === imgIdx ? "is-active" : ""}`}
                   onClick={() => goTo(i)}
-                  aria-label={`Show image ${i + 1}`}
+                  aria-label={`${t({ en: "Show image", es: "Mostrar imagen" })} ${i + 1}`}
                 />
               ))}
             </div>
@@ -514,44 +623,44 @@ function CBProject({ project, index }: { project: Project; index: number }) {
                 type="button"
                 className={`cb-proj-thumb ${i === imgIdx ? "is-active" : ""}`}
                 onClick={() => goTo(i)}
-                aria-label={`Image ${i + 1}`}
+                aria-label={`${t({ en: "Image", es: "Imagen" })} ${i + 1}`}
               >
                 <img src={src} alt="" loading="lazy" />
               </button>
             ))}
           </div>
         )}
-        <div className="cb-proj-index">PROJECT / 0{index + 1}</div>
+        <div className="cb-proj-index">{t({ en: "PROJECT", es: "PROYECTO" })} / 0{index + 1}</div>
       </div>
 
       <div className="cb-proj-content">
-        <div className="cb-proj-tag">{project.tagline}</div>
+        <div className="cb-proj-tag">{t(project.tagline)}</div>
         <h3 className="cb-proj-title">
-          {project.title}
-          {project.live && <span className="cb-proj-badge cb-proj-badge-live" title="Currently live">Live</span>}
-          {project.aiFree && <span className="cb-proj-badge" title="No AI involved in this build">AI-free</span>}
+          {title}
+          {project.live && <span className="cb-proj-badge cb-proj-badge-live" title={t({ en: "Currently live", es: "Actualmente en funcionamiento" })}>{t(LIVE)}</span>}
+          {project.aiFree && <span className="cb-proj-badge" title={t({ en: "No AI involved in this build", es: "Desarrollado sin IA" })}>{t({ en: "AI-free", es: "Sin IA" })}</span>}
         </h3>
-        <p className="cb-proj-desc">{project.desc}</p>
+        <p className="cb-proj-desc">{t(project.desc)}</p>
 
         <dl className="cb-proj-meta">
           {project.metrics.map((m) => (
-            <div key={m.k} className="cb-meta-row">
-              <dt>{m.k}</dt>
-              <dd>{m.v}</dd>
+            <div key={t(m.k)} className="cb-meta-row">
+              <dt>{t(m.k)}</dt>
+              <dd>{t(m.v)}</dd>
             </div>
           ))}
           <div className="cb-meta-row">
             <dt>stack</dt>
-            <dd>{project.stack.join(" · ")}</dd>
+            <dd>{project.stack.map(t).join(" · ")}</dd>
           </div>
         </dl>
 
         {project.href ? (
           <a className="cb-proj-link" href={project.href} target="_blank" rel="noreferrer">
-            {project.url} <span className="cb-arrow">↗</span>
+            {t(project.url)} <span className="cb-arrow">↗</span>
           </a>
         ) : (
-          <span className="cb-proj-link cb-proj-link-muted">{project.url}</span>
+          <span className="cb-proj-link cb-proj-link-muted">{t(project.url)}</span>
         )}
       </div>
 
@@ -564,19 +673,19 @@ function CBProject({ project, index }: { project: Project; index: number }) {
             onClick={() => setLightbox(false)}
             role="dialog"
             aria-modal="true"
-            aria-label={`${project.title} — image ${imgIdx + 1}`}
+            aria-label={`${title} — ${t({ en: "image", es: "imagen" })} ${imgIdx + 1}`}
           >
             <button
               type="button"
               className="cb-lb-close"
               onClick={(e) => { e.stopPropagation(); setLightbox(false); }}
-              aria-label="Close"
+              aria-label={t({ en: "Close", es: "Cerrar" })}
             >×</button>
             <button
               type="button"
               className="cb-lb-nav cb-lb-prev"
               onClick={(e) => { e.stopPropagation(); setImgIdx((i) => (i - 1 + total) % total); }}
-              aria-label="Previous"
+              aria-label={t({ en: "Previous", es: "Anterior" })}
             >‹</button>
             <div
               ref={lbStageRef}
@@ -627,7 +736,7 @@ function CBProject({ project, index }: { project: Project; index: number }) {
               type="button"
               className="cb-lb-nav cb-lb-next"
               onClick={(e) => { e.stopPropagation(); setImgIdx((i) => (i + 1) % total); }}
-              aria-label="Next"
+              aria-label={t({ en: "Next", es: "Siguiente" })}
             >›</button>
             <div className="cb-lb-counter">{imgIdx + 1} / {total}</div>
           </div>
@@ -638,6 +747,7 @@ function CBProject({ project, index }: { project: Project; index: number }) {
 }
 
 function CBTimeline() {
+  const { t } = useLang();
   const ref = useRef<HTMLDivElement | null>(null);
   const [progress, setProgress] = useState(0);
   useEffect(() => {
@@ -663,7 +773,7 @@ function CBTimeline() {
         <div key={i} className={`cb-tl-item ${item.current ? "is-current" : ""}`} style={{ transitionDelay: `${i * 50}ms` }}>
           <div className="cb-tl-year">
             {item.year}
-            {item.current && <span className="cb-tl-now">Now</span>}
+            {item.current && <span className="cb-tl-now">{t({ en: "Now", es: "Ahora" })}</span>}
           </div>
           <div className="cb-tl-marker" />
           <div className="cb-tl-card">
@@ -677,14 +787,14 @@ function CBTimeline() {
               )}
               <div>
                 <div className="cb-tl-company">{item.company}</div>
-                <div className="cb-tl-role">{item.role}</div>
+                <div className="cb-tl-role">{t(item.role)}</div>
               </div>
             </div>
-            {item.period && <div className="cb-tl-period">{item.period}{item.location ? ` · ${item.location}` : ""}</div>}
-            <div className="cb-tl-note">{item.note}</div>
+            {item.period && <div className="cb-tl-period">{t(item.period)}{item.location ? ` · ${t(item.location)}` : ""}</div>}
+            <div className="cb-tl-note">{t(item.note)}</div>
             {item.bullets && (
               <ul className="cb-tl-bullets">
-                {item.bullets.map((b, bi) => <li key={bi}>{b}</li>)}
+                {item.bullets.map((b, bi) => <li key={bi}>{t(b)}</li>)}
               </ul>
             )}
           </div>
@@ -695,6 +805,7 @@ function CBTimeline() {
 }
 
 function CBCerts() {
+  const { t } = useLang();
   return (
     <div className="cb-certs">
       {CB_CERTS.map((c, i) => (
@@ -708,7 +819,7 @@ function CBCerts() {
               </div>
             )}
           </div>
-          <div className="cb-cert-tier">{c.tier}</div>
+          <div className="cb-cert-tier">{t(TIER_LABEL[c.tier])}</div>
           <div className="cb-cert-name">{c.name}</div>
           <div className="cb-cert-year">{c.year}</div>
         </div>
@@ -717,21 +828,44 @@ function CBCerts() {
   );
 }
 
-function CBSection({ id, num, kicker, title, sub, children }: { id: string; num: string; kicker: string; title: string; sub?: string; children: React.ReactNode }) {
+function CBSection({ id, num, kicker, title, sub, children }: { id: string; num: string; kicker: Text; title: Text; sub?: Text; children: React.ReactNode }) {
+  const { t } = useLang();
   return (
     <section id={id} className="cb-section">
       <div className="cb-section-head">
         <div className="cb-section-num">{num}</div>
-        <div className="cb-section-kicker">{kicker}</div>
-        <h2 className="cb-section-title">{title}</h2>
-        {sub && <p className="cb-section-sub">{sub}</p>}
+        <div className="cb-section-kicker">{t(kicker)}</div>
+        <h2 className="cb-section-title">{t(title)}</h2>
+        {sub && <p className="cb-section-sub">{t(sub)}</p>}
       </div>
       {children}
     </section>
   );
 }
 
+function CBLangToggle() {
+  const { lang, setLang, t } = useLang();
+  return (
+    <div className="cb-lang" role="group" aria-label={t({ en: "Language", es: "Idioma" })}>
+      {LANGS.map((l) => (
+        <button
+          key={l}
+          type="button"
+          lang={l}
+          className="cb-lang-opt"
+          aria-pressed={lang === l}
+          aria-label={l === "en" ? "English" : "Español"}
+          onClick={() => setLang(l)}
+        >
+          {l.toUpperCase()}
+        </button>
+      ))}
+    </div>
+  );
+}
+
 const Index = () => {
+  const { t } = useLang();
   return (
     <div className="cb-root">
       <div className="cb-bg-grid" />
@@ -742,43 +876,64 @@ const Index = () => {
           <span className="cb-nav-logo">DV</span>
           <div className="cb-nav-name">
             <span>Daniel Vadillo</span>
-            <span className="cb-nav-role">{CB_PROFILE.role}</span>
+            <span className="cb-nav-role">{t(CB_PROFILE.role)}</span>
           </div>
         </div>
-        <nav className="cb-nav-links">
-          <a href="#cb-experience">Experience</a>
-          <a href="#cb-projects">Projects</a>
-          <a href="#cb-certs">Certifications</a>
-          <a href={CB_PROFILE.linkedin} target="_blank" rel="noreferrer" className="cb-nav-cta">LinkedIn →</a>
-        </nav>
+        <div className="cb-nav-end">
+          <nav className="cb-nav-links">
+            <a href="#cb-experience">{t({ en: "Experience", es: "Experiencia" })}</a>
+            <a href="#cb-projects">{t({ en: "Projects", es: "Proyectos" })}</a>
+            <a href="#cb-certs">{t({ en: "Certifications", es: "Certificaciones" })}</a>
+            <a href={CB_PROFILE.linkedin} target="_blank" rel="noreferrer" className="cb-nav-cta">LinkedIn →</a>
+          </nav>
+          <CBLangToggle />
+        </div>
       </header>
 
       <main className="cb-main">
         <CBHero />
         <CBStats />
 
-        <CBSection id="cb-experience" num="01" kicker="Career" title="Six years, three chapters." sub="Each step deeper into systems architecture.">
+        <CBSection
+          id="cb-experience"
+          num="01"
+          kicker={{ en: "Career", es: "Trayectoria" }}
+          title={{ en: "Six years, three chapters.", es: "Seis años, tres capítulos." }}
+          sub={{ en: "Each step deeper into systems architecture.", es: "Cada paso, más a fondo en la arquitectura de sistemas." }}
+        >
           <CBTimeline />
         </CBSection>
 
-        <CBSection id="cb-projects" num="02" kicker="Side projects" title="Things I ship on weekends." sub="Each one has been live, built solo end-to-end.">
+        <CBSection
+          id="cb-projects"
+          num="02"
+          kicker={{ en: "Side projects", es: "Proyectos personales" }}
+          title={{ en: "Things I ship on weekends.", es: "Lo que lanzo los fines de semana." }}
+          sub={{ en: "Each one has been live, built solo end-to-end.", es: "Todos han estado en producción, desarrollados en solitario de principio a fin." }}
+        >
           <div className="cb-projects">
-            {CB_PROJECTS.map((p, i) => <CBProject key={p.title} project={p} index={i} />)}
+            {CB_PROJECTS.map((p, i) => <CBProject key={p.href || p.images[0]} project={p} index={i} />)}
           </div>
         </CBSection>
 
-        <CBSection id="cb-certs" num="03" kicker="Trust marks" title="Three distinct architecture domains." sub="Application, Data, Integration — the credentials behind the practice.">
+        <CBSection
+          id="cb-certs"
+          num="03"
+          kicker={{ en: "Trust marks", es: "Credenciales" }}
+          title={{ en: "Three distinct architecture domains.", es: "Tres dominios de arquitectura distintos." }}
+          sub={{ en: "Application, Data, Integration — the credentials behind the practice.", es: "Aplicación, Datos, Integración: las certificaciones que respaldan la práctica." }}
+        >
           <CBCerts />
         </CBSection>
 
         <section className="cb-cta">
           <div className="cb-cta-inner">
-            <div className="cb-cta-kicker">Let's talk</div>
-            <h2 className="cb-cta-title">Need an architect who's actually shipped?</h2>
-            <p className="cb-cta-sub">Open to software architecture, platform, and AI integration work.</p>
+            <div className="cb-cta-kicker">{t({ en: "Let's talk", es: "Hablemos" })}</div>
+            <h2 className="cb-cta-title">{t({ en: "Need an architect who's actually shipped?", es: "¿Buscas un arquitecto que de verdad haya llevado proyectos a producción?" })}</h2>
+            <p className="cb-cta-sub">{t({ en: "Open to software architecture, platform, and AI integration work.", es: "Abierto a proyectos de arquitectura de software, plataforma e integración de IA." })}</p>
             <div className="cb-cta-row">
               <a className="cb-btn cb-btn-primary" href={CB_PROFILE.linkedin} target="_blank" rel="noreferrer">
-                Connect on LinkedIn <span className="cb-arrow">→</span>
+                {t(CONNECT_LINKEDIN)} <span className="cb-arrow">→</span>
               </a>
               <a className="cb-btn" href={`mailto:${CB_PROFILE.email}`}>{CB_PROFILE.email}</a>
             </div>
@@ -788,7 +943,7 @@ const Index = () => {
         <footer className="cb-footer">
           <span>© {new Date().getFullYear()} Daniel Vadillo</span>
           <span>·</span>
-          <span>Spain</span>
+          <span>{t({ en: "Spain", es: "España" })}</span>
           <span>·</span>
           <a href={CB_PROFILE.linkedin} target="_blank" rel="noreferrer">LinkedIn</a>
         </footer>

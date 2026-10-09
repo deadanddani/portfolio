@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { Loader2, MessageCircle } from "lucide-react";
 import "@/styles/cinematic-blueprint.css";
 import "@/styles/chat-launcher.css";
+import { useLang } from "@/i18n";
 
 // Salesforce Enhanced Chat (Embedded Messaging) is set up in index.html with
 // hideChatButtonOnLoad = true and its bootstrap script loaded lazily after page load.
@@ -34,6 +35,7 @@ const launchChat = (): Promise<boolean> => {
 };
 
 const ChatLauncher = () => {
+  const { t } = useLang();
   const [mounted, setMounted] = useState(false);
   const [ready, setReady] = useState(false);
   const [open, setOpen] = useState(false);
@@ -99,7 +101,7 @@ const ChatLauncher = () => {
       type="button"
       className="cb-btn cb-btn-primary cb-chat-launcher"
       onClick={onClick}
-      aria-label={pending ? "Loading chat" : "Open chat"}
+      aria-label={pending ? t({ en: "Loading chat", es: "Cargando chat" }) : t({ en: "Open chat", es: "Abrir chat" })}
       aria-haspopup="dialog"
       aria-busy={pending}
     >
@@ -108,7 +110,7 @@ const ChatLauncher = () => {
       ) : (
         <MessageCircle aria-hidden="true" className="cb-chat-icon" />
       )}
-      <span className="cb-chat-label">{pending ? "Loading…" : "Chat"}</span>
+      <span className="cb-chat-label">{pending ? t({ en: "Loading…", es: "Cargando…" }) : "Chat"}</span>
     </button>
   );
 };

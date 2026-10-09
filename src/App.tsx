@@ -7,6 +7,7 @@ import type { ReactNode } from "react";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import ChatLauncher from "./components/ChatLauncher";
+import { LanguageProvider } from "./i18n";
 
 const queryClient = new QueryClient();
 
@@ -16,12 +17,14 @@ export const BASENAME = "/portfolio";
 // so the prerendered markup matches what the client hydrates.
 export const AppShell = ({ children }: { children: ReactNode }) => (
   <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      {children}
-      <ChatLauncher />
-    </TooltipProvider>
+    <LanguageProvider>
+      <TooltipProvider>
+        <Toaster />
+        <Sonner />
+        {children}
+        <ChatLauncher />
+      </TooltipProvider>
+    </LanguageProvider>
   </QueryClientProvider>
 );
 
