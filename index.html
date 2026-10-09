@@ -22,8 +22,8 @@
       html, body { margin: 0; padding: 0; background: #0a0c12; color: #e8ecf2; font-family: 'Geist', 'Inter', system-ui, sans-serif; }
       #root { min-height: 100vh; }
     </style>
-    <script type="module" crossorigin src="/portfolio/assets/index-BQFOGHrF.js"></script>
-    <link rel="stylesheet" crossorigin href="/portfolio/assets/index-8j_5XslK.css">
+    <script type="module" crossorigin src="/portfolio/assets/index-Dh_jePIU.js"></script>
+    <link rel="stylesheet" crossorigin href="/portfolio/assets/index-BiAXzuCd.css">
   </head>
 
   <body>
@@ -31,7 +31,7 @@
 
     <!-- Record Embedded Messaging lifecycle events in case they fire before React mounts (read by ChatLauncher). -->
     <script type="text/javascript">
-      window.__chatState = { ready: false, open: false };
+      window.__chatState = { ready: false, open: false, requested: false };
       window.addEventListener('onEmbeddedMessagingButtonCreated', function () { window.__chatState.ready = true; });
       window.addEventListener('onEmbeddedMessagingWindowMaximized', function () { window.__chatState.open = true; });
       window.addEventListener('onEmbeddedMessagingWindowClosed', function () { window.__chatState.open = false; });
@@ -58,6 +58,23 @@
             }
         };
     </script>
-    <script type='text/javascript' src='https://northius2-dev-ed.develop.my.site.com/ESWwebCV1791474130383/assets/js/bootstrap.min.js' onload='initEmbeddedMessaging()'></script>
+    <!-- Same bootstrap script as Salesforce's snippet, but injected lazily so it doesn't block
+         the page: once the page is idle after load, or right away if the chat button is clicked first. -->
+    <script type='text/javascript'>
+        window.loadEmbeddedMessaging = function () {
+            if (window.__chatState.requested) return;
+            window.__chatState.requested = true;
+            var s = document.createElement('script');
+            s.type = 'text/javascript';
+            s.src = 'https://northius2-dev-ed.develop.my.site.com/ESWwebCV1791474130383/assets/js/bootstrap.min.js';
+            s.onload = initEmbeddedMessaging;
+            s.onerror = function () { window.dispatchEvent(new Event('embeddedMessagingLoadError')); };
+            document.body.appendChild(s);
+        };
+        window.addEventListener('load', function () {
+            if ('requestIdleCallback' in window) requestIdleCallback(window.loadEmbeddedMessaging, { timeout: 3000 });
+            else setTimeout(window.loadEmbeddedMessaging, 1000);
+        });
+    </script>
   </body>
 </html>
