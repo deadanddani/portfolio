@@ -18,7 +18,7 @@ const CONNECT_LINKEDIN: Text = { en: "Connect on LinkedIn", es: "Conecta en Link
 
 const CB_STATS: { value: number; suffix: string; label: Text }[] = [
   { value: 6, suffix: "", label: { en: "Years designing & shipping software", es: "Años diseñando y entregando software" } },
-  { value: 9, suffix: "", label: { en: "Certifications", es: "Certificaciones" } },
+  { value: 11, suffix: "", label: { en: "Certifications", es: "Certificaciones" } },
   { value: 5, suffix: "", label: { en: "Side projects shipped", es: "Proyectos personales lanzados" } },
   { value: 3, suffix: "", label: { en: "Architecture principles I live by", es: "Principios de arquitectura que sigo" } },
 ];
@@ -271,6 +271,8 @@ const TIER_LABEL: Record<Tier, Text> = {
 };
 
 const CB_CERTS: Cert[] = [
+  { name: "System Architect", img: asset("assets/cert-system-architect.png"), tier: "architect", year: "2026" },
+  { name: "Platform Identity and Access Management Architect", img: asset("assets/cert-iam.png"), tier: "architect", year: "2026" },
   { name: "Platform Development Lifecycle & Deployment Architect", img: asset("assets/cert-deployment.png"), tier: "architect", year: "2026" },
   { name: "Platform Integration Architect", img: asset("assets/cert-integration.png"), tier: "architect", year: "2026" },
   { name: "Application Architect", img: asset("assets/cert-app-architect.png"), tier: "architect", year: "2021" },
@@ -921,7 +923,7 @@ const Index = () => {
           num="03"
           kicker={{ en: "Trust marks", es: "Credenciales" }}
           title={{ en: "Three distinct architecture domains.", es: "Tres dominios de arquitectura distintos." }}
-          sub={{ en: "Application, Data, Integration — the credentials behind the practice.", es: "Aplicación, Datos, Integración: las certificaciones que respaldan la práctica." }}
+          sub={{ en: "Application, System, Data, Integration, Identity — the credentials behind the practice.", es: "Aplicación, Sistemas, Datos, Integración, Identidad: las certificaciones que respaldan la práctica." }}
         >
           <CBCerts />
         </CBSection>
